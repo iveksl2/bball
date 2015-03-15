@@ -1,4 +1,4 @@
-# bball model
+# b-ball model
 
 "I am a better investor because I am a businessman and a better businessman because I am an investor" - Warren Buffett
 
