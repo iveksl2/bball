@@ -28,7 +28,7 @@ Assuming all Macro / Micro level data has been gathered and analyzed and all ide
 * Determine mathematically exact point it is preferential to bet MoneyLine vs Point Spread given Win Probablity , Win Payouts. 
 
 Ideas To Investigate
-==========++
+=============
 * The Point should not deviate signficiantly from point differential.  Use [SRS](http://www.basketball-reference.com/blog/?p=39) point differential to weight strength of schedule. It is believed when this Diverges > ~ 4 points (recent delta weighted higher) this alone can be slightly profitable vs Mr. Vegas.
 
 * Home Court advantage applied unanimously to all spreads. (~2.75 pts) This is probably wrong. Home court can serve as a proxy for travel distance of away team rather than homecrowd/familiarity/etc. Therefore home-court should be broken down into distance traveled by away team.   The article above demonstrates home-court has a continuously diminished effect within recent years.  Need to validate this
