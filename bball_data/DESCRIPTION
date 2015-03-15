@@ -1,0 +1,8 @@
+Package: bball_data
+Title: retrieves basketball data 
+Version: 0.1
+Authors@R: "Igor, Veksler <iveksl2@gmail.com> "
+Description: What the package does (paragraph)
+Depends: R (>= 3.1.0)
+License: MIT 
+LazyData: true
