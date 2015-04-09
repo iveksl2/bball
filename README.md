@@ -1,3 +1,4 @@
+![test](http://cdn.collider.com/uploads/imagegallery/quantum_hoops/quantum_hoops_movie_image__2_.jpg)
 # B-ball model
 
 "I am a better investor because I am a businessman and a better businessman because I am an investor" - Warren Buffett
