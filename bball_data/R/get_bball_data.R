@@ -33,7 +33,7 @@ get_full_rpm <-  function() {
   full_rpm
 }
 
-#' Retrieves Team Level offensive and Defensive Efficienty 
+#' Retrieves Team Level offensive and Defensive Efficiency 
 #' @export
 get_eff <- function() {
   url <- 'http://espn.go.com/nba/hollinger/teamstats/_/sort/defensiveEff/order/false'
@@ -56,8 +56,9 @@ exp_pts <- function(teamA, teamB) {
   b_pace <- as.numeric(as.character(dat2[dat2$TEAM == teamB, 'PACE'])) 
   b_off_eff <- as.numeric(as.character(dat2[dat2$TEAM == teamB, 'OFF.EFF'])) 
   b_def_eff <- as.numeric(as.character(dat2[dat2$TEAM == teamB, 'DEF.EFF'])) 
-
+  ## (above) ugly code
   a_exp_pts <- a_pace / 100 * a_off_eff * ( b_def_eff / 100)
   b_exp_pts <- b_pace / 100 * b_off_eff * ( a_def_eff / 100)
   a_exp_pts + b_exp_pts
 }
+
