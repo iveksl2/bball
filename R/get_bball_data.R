@@ -1,4 +1,4 @@
-### first attempt at accessing basketball-reference.com (bible for nba statistics)
+## first attempt at accessing basketball-reference.com (bible for nba statistics)
 ### GET DATA
 require(plyr)
 library(XML)
@@ -44,6 +44,10 @@ get_eff <- function() {
   dat <- dat[-1, ]
 }
 
+open_table <- function() {
+  url <- 'http://espn.go.com/nba/hollinger/teamstats/_/sort/defensiveEff/order/false'
+  browseURL(url) 
+}
 #' Calculates total Expeted Points Scored of 2 Arbitrary Teams 
 #' @export
 exp_pts <- function(teamA, teamB) {
