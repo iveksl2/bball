@@ -1,4 +1,6 @@
 ## first attempt at accessing basketball-reference.com (bible for nba statistics)
+# TODO: Refactor below ugly code 
+
 ### GET DATA
 require(plyr)
 library(XML)
