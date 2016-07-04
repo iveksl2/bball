@@ -6,7 +6,7 @@ I.E.
 url  = 'http://www.basketball-reference.com/boxscores/index.cgi?month=3&day=22&year=2016'
 '2016-03-22', 'Charlotte Hornets', '25', '21', '21', '38', '105', 'Brooklyn Nets', '14', '22', '28', '36', '100'
 etc.
-Requirement: Python 3
+requirement: Python 3
 """
 #TODO:handle for overtime
 from bs4 import BeautifulSoup
@@ -51,10 +51,9 @@ def get_all_box_scores_on_pg(all_team_lnks, date_str = '', verbose = False):
 
 
 def main():
-	start_date = date(2014,  1,  1)  # date(2013, 12, 31) 
-	end_date   = date(2016,  7, 1) 
+	start_date = date(2010, 1, 1)  
+	end_date   = date(2016, 7, 1) 
 	date_range = pd.date_range(start_date, end_date, freq = 'D')
-	#url        = 'http://www.basketball-reference.com/boxscores/index.cgi?month=3&day=22&year=2016'
 
 	nba_box_scores = []
 	for idx in range(len(date_range)):
@@ -68,11 +67,11 @@ def main():
 		if (team_lnks == []): continue
 		date_str   = str(date_range[idx].date())
 		nba_box_scores.extend(get_all_box_scores_on_pg(team_lnks, date_str, verbose = True))
-		#time.sleep(.1) # curteousness not to spam
+		time.sleep(.1) # curteousness not to spam
 
 	#print(*nba_box_scores, sep = '\n')
 	box_score_df = pd.DataFrame(nba_box_scores, columns = ['date','hometeam','quarter1','quarter2','quarter3','quarter4','finalscore','awayteam','quarter1','quarter2','quarter3','quarter4','finalscore'])
-	box_score_df.to_csv('box_scores4.csv', index = False)	
+	box_score_df.to_csv('box_scores.csv', index = False)	
 
 
 if __name__ == "__main__":
