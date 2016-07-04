@@ -1,11 +1,4 @@
-## first attempt at accessing basketball-reference.com (bible for nba statistics)
 # TODO: Refactor dog shit code below you lazy schmuck
-
-### GET DATA
-require(plyr)
-library(XML)
-library(magrittr)
-library(dplyr)
 
 #' Retrieves current snapshot of team SRS data (taken from bball-ref)
 #' team simple rating system that takes into account point differential & strength of schedule 
