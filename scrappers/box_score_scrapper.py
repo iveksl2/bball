@@ -1,11 +1,12 @@
 """ 
-Scrapes basketball reference box score page. Return:
+Scrapes basketball reference box score page. Return(s):
 Date,Home Team,Quarter 1,Quarter 2,Quarter 3,Quarter 4,Final Score,Away Team,Quarter 1,Quarter 2,Quarter 3,Quarter 4,Final Score
 
 I.E.
 url  = 'http://www.basketball-reference.com/boxscores/index.cgi?month=3&day=22&year=2016'
 '2016-03-22', 'Charlotte Hornets', '25', '21', '21', '38', '105', 'Brooklyn Nets', '14', '22', '28', '36', '100'
 etc.
+Requirement: Python 3
 """
 #TODO:handle for overtime
 from bs4 import BeautifulSoup
