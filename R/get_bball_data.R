@@ -1,5 +1,5 @@
 ## first attempt at accessing basketball-reference.com (bible for nba statistics)
-# TODO: Refactor below ugly code 
+# TODO: Refactor dog shit code below you lazy schmuck
 
 ### GET DATA
 require(plyr)
