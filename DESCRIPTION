@@ -1,8 +1,0 @@
-Package: bball_data
-Title: Basketball data! 
-Version: 0.1
-Authors@R: person("Igor", "Veksler", role = c("aut", "cre"), email = "iveksl2@gmail.com")
-Description: retrieves basketball data 
-Depends: R (>= 3.1.0)
-License: MIT 
-LazyData: true
