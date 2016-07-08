@@ -8,7 +8,6 @@ url  = 'http://www.basketball-reference.com/boxscores/index.cgi?month=3&day=22&y
 etc.
 requirement: Python 3
 """
-#TODO:handle for overtime
 from bs4 import BeautifulSoup
 from datetime import date
 import requests
