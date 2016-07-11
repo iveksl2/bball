@@ -69,7 +69,7 @@ def main():
 		time.sleep(.1) # curteousness not to spam
 
 	#print(*nba_box_scores, sep = '\n')
-	box_score_df = pd.DataFrame(nba_box_scores, columns = ['date','hometeam','quarter1','quarter2','quarter3','quarter4','finalscore','awayteam','quarter1','quarter2','quarter3','quarter4','finalscore'])
+	box_score_df = pd.DataFrame(nba_box_scores, columns = ['date','awayteam','away_quarter1','away_quarter2','away_quarter3','away_quarter4','away_finalscore','hometeam','home_quarter1','home_quarter2','home_quarter3','home_quarter4','home_finalscore'])
 	box_score_df.to_csv('box_scores.csv', index = False)	
 
 
