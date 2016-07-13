@@ -8,13 +8,12 @@ names(raw_box_scores_df) <- #TODO: fix upstream in python scrapping code
 
 box_scores_df <- 
   dplyr::mutate(raw_box_scores_df, date = as.Date(date)) %>%
-  dplyr::mutate(., hm_crt_adv = home_finalscore - away_finalscore,
+  dplyr::mutate(., hm_crt_pt_diff = home_finalscore - away_finalscore,
                    year       = lubridate::year(date)) 
   
-hm_crt_pt_diff <- box_scores_df[['hm_crt_adv']]
 # How much is home court advantage worth?
-summary(hm_crt_pt_diff)
-hist(hm_crt_pt_diff , col = 'yellow', 
+summary(box_scores_df[['hm_crt_pt_diff']])
+hist(box_scores_df[['hm_crt_pt_diff']] , col = 'yellow', 
       main = 'Final score Point differential 2006-2016', 
       xlab = 'Home Team Final Score - Away Team Final Score', breaks = 85)
 # ^ Bimodal distrubtion
@@ -25,5 +24,9 @@ hist(hm_crt_pt_diff , col = 'yellow',
 box_scores_df %>%
   dplyr::group_by(year) %>%
   dplyr::summarise(start_date = min(date), end_date = max(date))
+#TODO: no 1 quarter how a significantly higher scoring output or home and awauy than any other
 
-
+# conditional on a win the home team tends to win by 11 points
+mean(abs(box_scores_df[['hm_crt_pt_diff']]) <= 5)
+subset(box_scores_df, hm_crt_pt_diff > 0) %>% .[['hm_crt_pt_diff']] %>% summary
+subset(box_scores_df, hm_crt_pt_diff < 0) %>% .[['hm_crt_pt_diff']] %>% summary # conditional on loss
