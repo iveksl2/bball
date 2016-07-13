@@ -9,9 +9,11 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 Imports:
+    lubridate,
     plyr,
     XML
 Suggests:
     dplyr,
-    magrittr
+    magrittr,
+    testthat
 RoxygenNote: 5.0.1.9000
