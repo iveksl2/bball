@@ -14,7 +14,7 @@ box_scores_df <-
 # How much is home court advantage worth?
 summary(box_scores_df[['hm_crt_pt_diff']])
 hist(box_scores_df[['hm_crt_pt_diff']] , col = 'yellow', 
-      main = 'Final score Point differential 2006-2016', 
+      main = 'Final Score point differential 2006-2016', 
       xlab = 'Home Team Final Score - Away Team Final Score', breaks = 85)
 # ^ Bimodal distrubtion
 
