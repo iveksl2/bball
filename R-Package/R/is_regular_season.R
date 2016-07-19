@@ -8,7 +8,7 @@ REG_SEASON_END_DAY     <- 16
 #'
 #' @export
 is_regular_season <- function(gm_date) {
-  stopifnot(is.Date(gm_date))
+  stopifnot(all(is.Date(gm_date)))
   gm_month <- lubridate::month(gm_date)
   gm_day   <- lubridate::day(gm_date)
   if (gm_month %in% c(11, 12, 1, 2, 3)) TRUE 
