@@ -17,8 +17,9 @@ output:
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ## -58.000  -6.000   4.000   3.093  12.000  55.000
 ```
- * *ANSWER: Interesting to note above is a bimodal distribution with close games occuring relatively infrequently. 
+ * *Analysis: Interesting to note above is a bimodal distribution with close games occuring relatively infrequently. 
    This would imply it would be advantegeous to bet moneyline rather than Point spread on smaller spreads.*  
+
 ### Contingent on a home court team winning, how much does a team typically win by?
 
 ```
@@ -32,16 +33,16 @@ output:
 
 ### Does home court advantge differ in the regular season vs the playoffs?
 ![plot of chunk home_crt_reg_vs_playoffs](figure/home_crt_reg_vs_playoffs-1.png)
-  * *ANSWER: Suprisingly the playoffs offer a stronger home court advantage*
+  * *Analysis: Suprisingly the playoffs offer a stronger home court advantage*
 
 ### Is home court advantage diminishing over time? 
 ![plot of chunk home_crt_over_time](figure/home_crt_over_time-1.png)
-  * *ANSWER: Generally home court advantage is slightly decreasing over time. 
-    However in 2016 there was a strong resurgance for Home Court.* **Theories?**
+  * *Analysis: Generally home court advantage is slightly decreasing over time. 
+    However last year within 2016 there was a strong resurgance for Home Court within the playoffs.* **Theories?**
 
 # Total points scored Analysis
 ![plot of chunk total_pts](figure/total_pts-1.png)
-  * *ANSWER: Less points per game are scored within playoffs. 
+  * *Analysis: Less points per game are scored within playoffs. 
     Likely due too diminished pace or more conservative foul calls by refereers.* TODO: Can verify both hypothesis
 
 
@@ -50,7 +51,7 @@ output:
 
 ### Which Half Scores mores points?
 ![plot of chunk half_analysis](figure/half_analysis-1.png)
-  * *ANSWER: Despite a team's being in foul trouble counter intuitively within 2nd half slightly less points are scored*
+  * *Analysis: Despite a team's being in foul trouble counter intuitively within 2nd half slightly less points are scored*
 
 ### What % of games go into overtime? 
 
