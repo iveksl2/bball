@@ -1,3 +1,10 @@
+---
+title: "Point Analysis"
+output:
+  md_document
+---
+
+```{r setup, echo = FALSE} 
 library(lubridate)
 label_seasons <- function(df) {
   stopifnot('reg_season' %in% names(df)) 
@@ -27,14 +34,16 @@ box_scores_df <-
                    reg_season      = vapply(box_scores_df$date, is_regular_season, logical(1)),  # function is not vectorized yet. Therefore `vapply` necessary
                    reg_season      = factor(ifelse(reg_season, 'Regular_Season', 'Playoffs'), levels = c('Regular_Season', 'Playoffs'))) %>%  
   label_seasons(.) 
+```
 
+```{r home_crt_analysis, echo = FALSE} 
 # How much is home court advantage worth?
 summary(box_scores_df[['hm_crt_pt_diff']])
 hist(box_scores_df[['hm_crt_pt_diff']] , col = 'yellow', 
       main = 'Final Score point differential 2006-2016', 
       xlab = 'Home Team Final Score - Away Team Final Score', breaks = 85)
-hist(box_scores_df[box_scores_df$reg_season == TRUE, 'hm_crt_pt_diff'] , col = 'blue', breaks = 85, xlim = c(-20, 20))
-hist(box_scores_df[box_scores_df$reg_season == FALSE, 'hm_crt_pt_diff'] , col = 'green', breaks = 85, xlim = c(-20, 20))
+#hist(box_scores_df[box_scores_df$reg_season == TRUE, 'hm_crt_pt_diff'] , col = 'blue', breaks = 85, xlim = c(-20, 20))
+#hist(box_scores_df[box_scores_df$reg_season == FALSE, 'hm_crt_pt_diff'] , col = 'green', breaks = 85, xlim = c(-20, 20))
 
 # ^ Bimodal distrubtion
 
@@ -62,8 +71,10 @@ box_scores_df %>%
   geom_line() + ylab('Home Team Total Points - Away Team Total Points') + 
   ggtitle('Home Court Advantage - Point Differential over Time')
 
+```
 
 # ------- Total points scored over time --------
+```{r total_pts, echo = FALSE} 
 box_scores_df %>%
   dplyr::group_by(year, reg_season) %>%
   summarise(total_pts = mean(total_pts)) %>%
@@ -81,7 +92,8 @@ box_scores_df %>%
 
 box_scores_df %>%
   ggplot(., aes(total_pts, fill = reg_season))  + geom_density(alpha = .5) 
-
+```
+```{r half_analysis, echo = FALSE} 
 # - Which Half Scores more pts? - 
 box_scores_df %>% 
   dplyr::select(first_half_pts, second_half_pts) %>% 
@@ -90,16 +102,19 @@ box_scores_df %>%
   dplyr::summarise(ave_pts = mean(pts)) %>%
   ggplot(., aes(half, ave_pts, fill = half)) + geom_bar(stat = 'identity') +
   coord_cartesian(ylim=c(85, 115)) + ggtitle('Which Half Scores more Points?')
+
 #TODO: Make comment how this is despite foul trouble
 
 box_scores_df %>% 
   dplyr::select(first_half_pts, second_half_pts) %>% 
   tidyr::gather(., half, pts) %>%
+```
 
 # - What % of the time do overtime games occur? 
+```{r overtime_percent, echo = FALSE} 
 box_scores_df %>% 
   dplyr::mutate(overtime = (first_half_pts + second_half_pts != total_pts)) %>%
   .[['overtime']] %>% mean 
-
+```
 
 
