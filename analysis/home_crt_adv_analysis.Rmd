@@ -1,0 +1,122 @@
+---
+title: "Point Analysis"
+output:
+  md_document
+---
+
+```{r setup, echo = FALSE} 
+library(lubridate)
+label_seasons <- function(df) {
+  stopifnot('reg_season' %in% names(df)) 
+  seasonal_vec <- vector(length = nrow(df))
+  season <- 1
+  for (i in seq_len(nrow(df))) {
+    if (df[i, 'reg_season'] == TRUE & df[max(1, i - 1), 'reg_season'] == FALSE) season = season + 1
+    seasonal_vec[i] <- season
+  }
+  df[['season']] <- seasonal_vec  
+  df
+}
+
+raw_box_scores_df <- read.csv('box_scores.csv')
+
+names(raw_box_scores_df) <- #TODO: fix upstream in python scrapping code
+  c('date', 'away_team', 'away_quarter1','away_quarter2','away_quarter3','away_quarter4', 'away_finalscore',
+            'home_team', 'home_quarter1','home_quarter2','home_quarter3','home_quarter4', 'home_finalscore') 
+
+box_scores_df <- 
+  dplyr::mutate(raw_box_scores_df, date = as.Date(date)) %>%
+  dplyr::mutate(., hm_crt_pt_diff  = home_finalscore - away_finalscore,
+                   year            = lubridate::year(date),
+                   first_half_pts  = home_quarter1 + home_quarter2 + away_quarter1 + away_quarter2,
+                   second_half_pts = home_quarter3 + home_quarter4 + away_quarter3 + away_quarter4,
+                   total_pts       = away_finalscore + home_finalscore,
+                   reg_season      = vapply(box_scores_df$date, is_regular_season, logical(1)),  # function is not vectorized yet. Therefore `vapply` necessary
+                   reg_season      = factor(ifelse(reg_season, 'Regular_Season', 'Playoffs'), levels = c('Regular_Season', 'Playoffs'))) %>%  
+  label_seasons(.) 
+```
+
+### How much is home court advantage worth?
+```{r home_crt_analysis_overall, echo = FALSE} 
+hist(box_scores_df[['hm_crt_pt_diff']] , col = 'yellow', 
+      main = 'Final Score point differential 2006-2016', 
+      xlab = 'Home Team Final Score - Away Team Final Score', breaks = 85)
+cat('Final Home Score - Final Away Team Score:\n')
+summary(box_scores_df[['hm_crt_pt_diff']])
+#hist(box_scores_df[box_scores_df$reg_season == TRUE, 'hm_crt_pt_diff'] , col = 'blue', breaks = 85, xlim = c(-20, 20))
+#hist(box_scores_df[box_scores_df$reg_season == FALSE, 'hm_crt_pt_diff'] , col = 'green', breaks = 85, xlim = c(-20, 20))
+```
+ * *Analysis: Interesting to note above is a bimodal distribution with close games occuring relatively infrequently. 
+   This would imply it would be advantegeous to bet moneyline rather than Point spread on smaller spreads.*  
+
+##### Contingent on a home court team winning, how much does a team typically win by?
+```{r home_crt_conditional, echo = FALSE} 
+subset(box_scores_df, hm_crt_pt_diff > 0) %>% .[['hm_crt_pt_diff']] %>% summary
+```
+
+### Does home court advantge differ in the regular season vs the playoffs?
+```{r home_crt_reg_vs_playoffs, echo = FALSE} 
+box_scores_df %>%
+  dplyr::group_by(reg_season) %>%
+  summarise(hm_crt_pt_diff = mean(hm_crt_pt_diff)) %>%
+  ggplot2::ggplot(., aes(reg_season, hm_crt_pt_diff)) + 
+    geom_bar(stat = 'identity') + theme_bw()
+```
+  * *Analysis: Suprisingly the playoffs offer a stronger home court advantage*
+
+### Is home court advantage diminishing over time? 
+```{r home_crt_over_time, echo = FALSE} 
+box_scores_df %>%
+  dplyr::group_by(year, reg_season) %>%
+  summarise(hm_crt_pt_diff = mean(hm_crt_pt_diff)) %>%
+  ggplot2::ggplot(., aes(year, hm_crt_pt_diff, color = reg_season)) + 
+  geom_line() + ylab('Home Team Total Points - Away Team Total Points') + 
+  ggtitle('Home Court Advantage Point Differential over Time')
+```
+  * *Analysis: Generally home court advantage is slightly decreasing over time. 
+    However last year within 2016 there was a strong resurgance for Home Court within the playoffs.* **Theories?**
+
+# Total points scored Analysis
+```{r total_pts, echo = FALSE} 
+box_scores_df %>%
+  dplyr::group_by(reg_season) %>%
+  summarise(total_pts = mean(total_pts)) %>%
+  ggplot(., aes(reg_season, total_pts))  +  geom_bar(stat = 'identity', aes(fill = reg_season)) + 
+  coord_cartesian(ylim=c(175, 225)) + ylab('Average Total Pts Scored') + 
+  ggtitle('Are more points scored in the Regular Season or Post Season?')
+```
+  * *Analysis: Less points per game are scored within playoffs. 
+    Likely due too diminished pace or more conservative foul calls by referees.* TODO: Can verify both hypothesis
+
+
+```{r total_pts_over_time, echo = FALSE} 
+box_scores_df %>%
+  dplyr::group_by(year, reg_season) %>%
+  summarise(total_pts = mean(total_pts)) %>%
+  ggplot(., aes(year, total_pts , color = reg_season)) + 
+  geom_line() + geom_point() + 
+  geom_smooth(se = FALSE, method = 'lm', size = .5, linetype="dotted") + 
+  ggtitle('Total Pts Scored Over Time (Regular Season vs Playoffs)')
+```
+  * *General trajectory of the league is increasing point totals. 2011 was lockout year and explains dampened point totals*
+
+### Which Half Scores mores points?
+```{r half_analysis, echo = FALSE} 
+box_scores_df %>% 
+  dplyr::select(first_half_pts, second_half_pts) %>% 
+  tidyr::gather(., half, pts) %>%
+  dplyr::group_by(half) %>% 
+  dplyr::summarise(ave_pts = mean(pts)) %>%
+  ggplot(., aes(half, ave_pts, fill = half)) + geom_bar(stat = 'identity') +
+  coord_cartesian(ylim=c(85, 115)) + ggtitle('Which Half Scores more Points?')
+```
+  * *Analysis: Despite a team's being in foul trouble counter intuitively within 2nd half slightly less points are scored*
+
+### What % of games go into overtime? 
+```{r overtime_percent, echo = FALSE} 
+box_scores_df %>% 
+  dplyr::mutate(overtime = (first_half_pts + second_half_pts != total_pts)) %>%
+  .[['overtime']] %>% mean * 100 
+```
+
+
