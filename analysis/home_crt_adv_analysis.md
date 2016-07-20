@@ -29,40 +29,25 @@ output:
 ```
 
 ### Does home court advantge differ in the regular season vs the playoffs?
-
-```
-## Error in inherits(mapping, "uneval"): could not find function "aes"
-```
+![plot of chunk home_crt_reg_vs_playoffs](figure/home_crt_reg_vs_playoffs-1.png)
   * *Analysis: Suprisingly the playoffs offer a stronger home court advantage despite the better teams playing each other*
 
 ### Is home court advantage diminishing over time? 
-
-```
-## Error in inherits(mapping, "uneval"): could not find function "aes"
-```
+![plot of chunk home_crt_over_time](figure/home_crt_over_time-1.png)
   * *Analysis: Generally home court advantage is slightly decreasing over time. 
     However last year within 2016 there was a very strong resurgance for Home Court within the playoffs.* **Theories?**
 
 # Total points scored Analysis
-
-```
-## Error in function_list[[k]](value): could not find function "ggplot"
-```
+![plot of chunk total_pts](figure/total_pts-1.png)
   * *Analysis: Less points per game are scored within playoffs. 
     Likely due too diminished pace or more conservative officiating.* TODO: Can verify both hypothesis
 
 
-
-```
-## Error in function_list[[k]](value): could not find function "ggplot"
-```
+![plot of chunk total_pts_over_time](figure/total_pts_over_time-1.png)
   * *General trajectory of the league is increasing point totals. 2011 was lockout year and explains dampened point totals*
 
 ### Which Half Scores mores points?
-
-```
-## Error in function_list[[k]](value): could not find function "ggplot"
-```
+![plot of chunk half_analysis](figure/half_analysis-1.png)
 
 ```
 ## # A tibble: 2 x 2

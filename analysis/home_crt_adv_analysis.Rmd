@@ -6,6 +6,7 @@ output:
 
 ```{r setup, echo = FALSE} 
 library(lubridate)
+library(ggplot2)
 label_seasons <- function(df) {
   stopifnot('reg_season' %in% names(df)) 
   seasonal_vec <- vector(length = nrow(df))
