@@ -6,17 +6,17 @@ output:
 
 
 
-# How much is home court advantage worth?
+## How much is home court advantage worth?
 
 ```
-##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -58.000  -6.000   4.000   3.093  12.000  55.000
+## Error: <text>:4:48: unexpected input
+## 3:       xlab = 'Home Team Final Score - Away Team Final Score', breaks = 85)
+## 4: cat('Final Home Score - Final Away Team Score:'\
+##                                                   ^
 ```
-
-![plot of chunk home_crt_analysis_overall](figure/home_crt_analysis_overall-1.png)
- * Interesting to note above is a bimodal distribution with close games occuring relatively infrequently. 
-   This would imply it would be advantegeous to bet moneyline rather than Point spread on smaller spreads.  
-
+ * *ANSWER: Interesting to note above is a bimodal distribution with close games occuring relatively infrequently. 
+   This would imply it would be advantegeous to bet moneyline rather than Point spread on smaller spreads.*  
+### Contingent on a home court team winning, how much does a team typically win by?
 
 ```
 ## [1] 0.2755043
@@ -26,30 +26,33 @@ output:
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##    1.00    6.00   10.00   11.73   16.00   55.00
 ```
-  * Conditional on a win the home team tends to win by 11 points
 
-# Does home court advantge matter differ in the regular season vs the playoffs?
+## Does home court advantge differ in the regular season vs the playoffs?
 ![plot of chunk home_crt_reg_vs_playoffs](figure/home_crt_reg_vs_playoffs-1.png)
+  * *ANSWER: Suprisingly the playoffs offer a stronger home court advantage*
 
-# Is home court advantage diminishing over time? 
+## Is home court advantage diminishing over time? 
 ![plot of chunk home_crt_over_time](figure/home_crt_over_time-1.png)
+  * ANSWER: Generally home court advantage is slightly decreasing over time. 
+    However in 2016 there was a strong resurgance for Home Court. Theories?
 
 # Total points scored Analysis
 ![plot of chunk total_pts](figure/total_pts-1.png)
-  * Less points per game are scored within playoffs. 
-    Likely due to diminished pace or more conservative foul calls by refereers. TODO: Can verify both hypothesis
+  * *ANSWER: Less points per game are scored within playoffs. 
+    Likely due too diminished pace or more conservative foul calls by refereers. TODO: Can verify both hypothesis*
+
 
 ![plot of chunk total_pts_over_time](figure/total_pts_over_time-1.png)
-  * General trajectory of the league is increasing point totals
+  * *ANSWER: General trajectory of the league is increasing point totals*
 
 # Which Half Scores mores points?
 ![plot of chunk half_analysis](figure/half_analysis-1.png)
-  * Despite a team's being in foul trouble counter intuitively within 2nd half slightly less points are scored
+  * *ANSWER: Despite a team's being in foul trouble counter intuitively within 2nd half slightly less points are scored*
 
-# What % of the time do overtime games occur? 
+# What % of games go into overtime? 
 
 ```
-## [1] 0.06247279
+## [1] 6.247279
 ```
 
 

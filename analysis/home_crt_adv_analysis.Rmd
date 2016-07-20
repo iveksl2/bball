@@ -36,42 +36,45 @@ box_scores_df <-
   label_seasons(.) 
 ```
 
-# How much is home court advantage worth?
+## How much is home court advantage worth?
 ```{r home_crt_analysis_overall, echo = FALSE} 
-summary(box_scores_df[['hm_crt_pt_diff']])
 hist(box_scores_df[['hm_crt_pt_diff']] , col = 'yellow', 
       main = 'Final Score point differential 2006-2016', 
       xlab = 'Home Team Final Score - Away Team Final Score', breaks = 85)
+cat('Final Home Score - Final Away Team Score:'\n)
+summary(box_scores_df[['hm_crt_pt_diff']])
 #hist(box_scores_df[box_scores_df$reg_season == TRUE, 'hm_crt_pt_diff'] , col = 'blue', breaks = 85, xlim = c(-20, 20))
 #hist(box_scores_df[box_scores_df$reg_season == FALSE, 'hm_crt_pt_diff'] , col = 'green', breaks = 85, xlim = c(-20, 20))
 ```
- * Interesting to note above is a bimodal distribution with close games occuring relatively infrequently. 
-   This would imply it would be advantegeous to bet moneyline rather than Point spread on smaller spreads.  
-
+ * *ANSWER: Interesting to note above is a bimodal distribution with close games occuring relatively infrequently. 
+   This would imply it would be advantegeous to bet moneyline rather than Point spread on smaller spreads.*  
+### Contingent on a home court team winning, how much does a team typically win by?
 ```{r home_crt_conditional, echo = FALSE} 
 mean(abs(box_scores_df[['hm_crt_pt_diff']]) <= 5)
 subset(box_scores_df, hm_crt_pt_diff > 0) %>% .[['hm_crt_pt_diff']] %>% summary
 ```
-  * Conditional on a win the home team tends to win by 11 points
 
-# Does home court advantge matter differ in the regular season vs the playoffs?
+## Does home court advantge differ in the regular season vs the playoffs?
 ```{r home_crt_reg_vs_playoffs, echo = FALSE} 
 box_scores_df %>%
   dplyr::group_by(reg_season) %>%
   summarise(hm_crt_pt_diff = mean(hm_crt_pt_diff)) %>%
-  ggplot2::ggplot(., aes(reg_season, hm_crt_pt_diff)) + geom_bar(stat = 'identity') 
+  ggplot2::ggplot(., aes(reg_season, hm_crt_pt_diff)) + 
+    geom_bar(stat = 'identity') + theme_bw()
 ```
+  * *ANSWER: Suprisingly the playoffs offer a stronger home court advantage*
 
-# Is home court advantage diminishing over time? 
+## Is home court advantage diminishing over time? 
 ```{r home_crt_over_time, echo = FALSE} 
 box_scores_df %>%
   dplyr::group_by(year, reg_season) %>%
   summarise(hm_crt_pt_diff = mean(hm_crt_pt_diff)) %>%
   ggplot2::ggplot(., aes(year, hm_crt_pt_diff, color = reg_season)) + 
   geom_line() + ylab('Home Team Total Points - Away Team Total Points') + 
-  ggtitle('Home Court Advantage - Point Differential over Time')
-
+  ggtitle('Home Court Advantage Point Differential over Time')
 ```
+  * ANSWER: Generally home court advantage is slightly decreasing over time. 
+    However in 2016 there was a strong resurgance for Home Court. Theories?
 
 # Total points scored Analysis
 ```{r total_pts, echo = FALSE} 
@@ -82,8 +85,9 @@ box_scores_df %>%
   coord_cartesian(ylim=c(175, 225)) + ylab('Average Total Pts Scored') + 
   ggtitle('Are more points scored in the Regular Season or Post Season?')
 ```
-  * Less points per game are scored within playoffs. 
-    Likely due to diminished pace or more conservative foul calls by refereers. TODO: Can verify both hypothesis
+  * *ANSWER: Less points per game are scored within playoffs. 
+    Likely due too diminished pace or more conservative foul calls by refereers. TODO: Can verify both hypothesis*
+
 
 ```{r total_pts_over_time, echo = FALSE} 
 box_scores_df %>%
@@ -94,7 +98,7 @@ box_scores_df %>%
   geom_smooth(se = FALSE, method = 'lm', size = .5, linetype="dotted") + 
   ggtitle('Total Pts Scored Over Time (Regular Season vs Playoffs)')
 ```
-  * General trajectory of the league is increasing point totals
+  * *ANSWER: General trajectory of the league is increasing point totals*
 
 # Which Half Scores mores points?
 ```{r half_analysis, echo = FALSE} 
@@ -106,13 +110,13 @@ box_scores_df %>%
   ggplot(., aes(half, ave_pts, fill = half)) + geom_bar(stat = 'identity') +
   coord_cartesian(ylim=c(85, 115)) + ggtitle('Which Half Scores more Points?')
 ```
-  * Despite a team's being in foul trouble counter intuitively within 2nd half slightly less points are scored
+  * *ANSWER: Despite a team's being in foul trouble counter intuitively within 2nd half slightly less points are scored*
 
-# What % of the time do overtime games occur? 
+# What % of games go into overtime? 
 ```{r overtime_percent, echo = FALSE} 
 box_scores_df %>% 
   dplyr::mutate(overtime = (first_half_pts + second_half_pts != total_pts)) %>%
-  .[['overtime']] %>% mean 
+  .[['overtime']] %>% mean * 100 
 ```
 
 
