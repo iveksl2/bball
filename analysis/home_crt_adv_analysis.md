@@ -43,7 +43,7 @@ output:
 
 
 ![plot of chunk total_pts_over_time](figure/total_pts_over_time-1.png)
-  * *General trajectory of the league is increasing point totals*
+  * *General trajectory of the league is increasing point totals. 2011 was lockout year and explains dampened point totals*
 
 ### Which Half Scores mores points?
 ![plot of chunk half_analysis](figure/half_analysis-1.png)

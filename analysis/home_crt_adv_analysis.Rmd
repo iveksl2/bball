@@ -98,7 +98,7 @@ box_scores_df %>%
   geom_smooth(se = FALSE, method = 'lm', size = .5, linetype="dotted") + 
   ggtitle('Total Pts Scored Over Time (Regular Season vs Playoffs)')
 ```
-  * *General trajectory of the league is increasing point totals*
+  * *General trajectory of the league is increasing point totals. 2011 was lockout year and explains dampened point totals*
 
 ### Which Half Scores mores points?
 ```{r half_analysis, echo = FALSE} 
