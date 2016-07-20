@@ -49,9 +49,8 @@ summary(box_scores_df[['hm_crt_pt_diff']])
  * *Analysis: Interesting to note above is a bimodal distribution with close games occuring relatively infrequently. 
    This would imply it would be advantegeous to bet moneyline rather than Point spread on smaller spreads.*  
 
-### Contingent on a home court team winning, how much does a team typically win by?
+##### Contingent on a home court team winning, how much does a team typically win by?
 ```{r home_crt_conditional, echo = FALSE} 
-mean(abs(box_scores_df[['hm_crt_pt_diff']]) <= 5)
 subset(box_scores_df, hm_crt_pt_diff > 0) %>% .[['hm_crt_pt_diff']] %>% summary
 ```
 
@@ -87,7 +86,7 @@ box_scores_df %>%
   ggtitle('Are more points scored in the Regular Season or Post Season?')
 ```
   * *Analysis: Less points per game are scored within playoffs. 
-    Likely due too diminished pace or more conservative foul calls by refereers.* TODO: Can verify both hypothesis
+    Likely due too diminished pace or more conservative foul calls by referees.* TODO: Can verify both hypothesis
 
 
 ```{r total_pts_over_time, echo = FALSE} 

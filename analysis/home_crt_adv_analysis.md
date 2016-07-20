@@ -20,11 +20,7 @@ output:
  * *Analysis: Interesting to note above is a bimodal distribution with close games occuring relatively infrequently. 
    This would imply it would be advantegeous to bet moneyline rather than Point spread on smaller spreads.*  
 
-### Contingent on a home court team winning, how much does a team typically win by?
-
-```
-## [1] 0.2755043
-```
+##### Contingent on a home court team winning, how much does a team typically win by?
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
@@ -43,7 +39,7 @@ output:
 # Total points scored Analysis
 ![plot of chunk total_pts](figure/total_pts-1.png)
   * *Analysis: Less points per game are scored within playoffs. 
-    Likely due too diminished pace or more conservative foul calls by refereers.* TODO: Can verify both hypothesis
+    Likely due too diminished pace or more conservative foul calls by referees.* TODO: Can verify both hypothesis
 
 
 ![plot of chunk total_pts_over_time](figure/total_pts_over_time-1.png)
