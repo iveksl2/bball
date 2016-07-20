@@ -36,34 +36,34 @@ box_scores_df <-
   label_seasons(.) 
 ```
 
-```{r home_crt_analysis, echo = FALSE} 
 # How much is home court advantage worth?
+```{r home_crt_analysis_overall, echo = FALSE} 
 summary(box_scores_df[['hm_crt_pt_diff']])
 hist(box_scores_df[['hm_crt_pt_diff']] , col = 'yellow', 
       main = 'Final Score point differential 2006-2016', 
       xlab = 'Home Team Final Score - Away Team Final Score', breaks = 85)
 #hist(box_scores_df[box_scores_df$reg_season == TRUE, 'hm_crt_pt_diff'] , col = 'blue', breaks = 85, xlim = c(-20, 20))
 #hist(box_scores_df[box_scores_df$reg_season == FALSE, 'hm_crt_pt_diff'] , col = 'green', breaks = 85, xlim = c(-20, 20))
+```
+ * Interesting to note above is a bimodal distribution with close games occuring relatively infrequently. 
+   This would imply it would be advantegeous to bet moneyline rather than Point spread on smaller spreads.  
 
-# ^ Bimodal distrubtion
-
-box_scores_df %>%
-  dplyr::group_by(year) %>%
-  dplyr::summarise(start_date = min(date), end_date = max(date))
-#TODO: no 1 quarter how a significantly higher scoring output or home and awauy than any other
-
-# conditional on a win the home team tends to win by 11 points
+```{r home_crt_conditional, echo = FALSE} 
 mean(abs(box_scores_df[['hm_crt_pt_diff']]) <= 5)
 subset(box_scores_df, hm_crt_pt_diff > 0) %>% .[['hm_crt_pt_diff']] %>% summary
-subset(box_scores_df, hm_crt_pt_diff < 0) %>% .[['hm_crt_pt_diff']] %>% summary # conditional on loss
+```
+  * Conditional on a win the home team tends to win by 11 points
 
 # Does home court advantge matter differ in the regular season vs the playoffs?
+```{r home_crt_reg_vs_playoffs, echo = FALSE} 
 box_scores_df %>%
   dplyr::group_by(reg_season) %>%
   summarise(hm_crt_pt_diff = mean(hm_crt_pt_diff)) %>%
   ggplot2::ggplot(., aes(reg_season, hm_crt_pt_diff)) + geom_bar(stat = 'identity') 
+```
 
-# Does Advantage diminishing over time?
+# Is home court advantage diminishing over time? 
+```{r home_crt_over_time, echo = FALSE} 
 box_scores_df %>%
   dplyr::group_by(year, reg_season) %>%
   summarise(hm_crt_pt_diff = mean(hm_crt_pt_diff)) %>%
@@ -73,8 +73,19 @@ box_scores_df %>%
 
 ```
 
-# ------- Total points scored over time --------
+# Total points scored Analysis
 ```{r total_pts, echo = FALSE} 
+box_scores_df %>%
+  dplyr::group_by(reg_season) %>%
+  summarise(total_pts = mean(total_pts)) %>%
+  ggplot(., aes(reg_season, total_pts))  +  geom_bar(stat = 'identity', aes(fill = reg_season)) + 
+  coord_cartesian(ylim=c(175, 225)) + ylab('Average Total Pts Scored') + 
+  ggtitle('Are more points scored in the Regular Season or Post Season?')
+```
+  * Less points per game are scored within playoffs. 
+    Likely due to diminished pace or more conservative foul calls by refereers. TODO: Can verify both hypothesis
+
+```{r total_pts_over_time, echo = FALSE} 
 box_scores_df %>%
   dplyr::group_by(year, reg_season) %>%
   summarise(total_pts = mean(total_pts)) %>%
@@ -82,19 +93,11 @@ box_scores_df %>%
   geom_line() + geom_point() + 
   geom_smooth(se = FALSE, method = 'lm', size = .5, linetype="dotted") + 
   ggtitle('Total Pts Scored Over Time (Regular Season vs Playoffs)')
-
-box_scores_df %>%
-  dplyr::group_by(reg_season) %>%
-  summarise(total_pts = mean(total_pts)) %>%
-  ggplot(., aes(reg_season, total_pts))  +  geom_bar(stat = 'identity', aes(fill = reg_season)) + 
-  coord_cartesian(ylim=c(175, 225)) + ylab('Average Total Pts Scored') + 
-  ggtitle('Are more points scored in the Regular Season or Post Season?')
-
-box_scores_df %>%
-  ggplot(., aes(total_pts, fill = reg_season))  + geom_density(alpha = .5) 
 ```
+  * General trajectory of the league is increasing point totals
+
+# Which Half Scores mores points?
 ```{r half_analysis, echo = FALSE} 
-# - Which Half Scores more pts? - 
 box_scores_df %>% 
   dplyr::select(first_half_pts, second_half_pts) %>% 
   tidyr::gather(., half, pts) %>%
@@ -102,15 +105,10 @@ box_scores_df %>%
   dplyr::summarise(ave_pts = mean(pts)) %>%
   ggplot(., aes(half, ave_pts, fill = half)) + geom_bar(stat = 'identity') +
   coord_cartesian(ylim=c(85, 115)) + ggtitle('Which Half Scores more Points?')
-
-#TODO: Make comment how this is despite foul trouble
-
-box_scores_df %>% 
-  dplyr::select(first_half_pts, second_half_pts) %>% 
-  tidyr::gather(., half, pts) %>%
 ```
+  * Despite a team's being in foul trouble counter intuitively within 2nd half slightly less points are scored
 
-# - What % of the time do overtime games occur? 
+# What % of the time do overtime games occur? 
 ```{r overtime_percent, echo = FALSE} 
 box_scores_df %>% 
   dplyr::mutate(overtime = (first_half_pts + second_half_pts != total_pts)) %>%
