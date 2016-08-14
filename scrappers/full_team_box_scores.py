@@ -16,11 +16,8 @@ def make_soup(url):
 
 
 def main():
-start_date = date(2010, 1, 1)  
-end_date   = date(2016, 7, 1) 
-date_range = pd.date_range(start_date, end_date, freq = 'D')
-
-soup       = make_soup(url)
+# key line
+soup.find_all('tfoot')
 
 
 if __name__ == "__main__":
