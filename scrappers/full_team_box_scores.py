@@ -10,8 +10,7 @@ import pdb
 import time
 
 def soup_from_url(url):
-""" url -> SoupObj ; Instantiate Beautiful Soup Object from a url.
-"""    
+    """ url -> SoupObj ; Instantiate Beautiful Soup Object from a url """    
 	response = requests.get(url)
 	html     = response.content
 	soup     = BeautifulSoup(html, 'lxml')
