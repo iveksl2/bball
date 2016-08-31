@@ -8,6 +8,27 @@ import re
 import pandas as pd
 import pdb
 import time
+ 
+# constants
+BBALL_REF_TEAM_MAP = {
+    'Atlanta Hawks'         : 'ATL', 'Boston Celtics'        : 'BOS',
+    'Brooklyn Nets'         : 'BRK', 'Charlotte Bobcats'     : 'CHA',
+    'Charlotte Hornets'     : 'CHO', 'Chicago Bulls'         : 'CHI',
+    'Cleveland Cavaliers'   : 'CLE', 'Dallas Mavericks'      : 'DAL',
+    'Denver Nuggets'        : 'DEN', 'Detroit Pistons'       : 'DET',
+    'Golden State Warriors' : 'GSW', 'Houston Rockets'       : 'HOU',
+    'Indiana Pacers'        : 'IND', 'Los Angeles Clippers'  : 'LAC',
+    'Los Angeles Lakers'    : 'LAL', 'Memphis Grizzlies'     : 'MEM',
+    'Miami Heat'            : 'MIA', 'Milwaukee Bucks'       : 'MIL',
+    'Minnesota Timberwolves': 'MIN', 'New Jersey Nets'       : 'NJN',
+    'New Orleans Pelicans'  : 'NOP', 'New Orleans/Oklahoma City Hornets' : 'NOH',
+    'New York Knicks'       : 'NYK', 'Oklahoma City Thunder' : 'OKC',
+    'Orlando Magic'         : 'ORL', 'Philadelphia 76ers'    : 'PHI',
+    'Phoenix Suns'          : 'PHO', 'Portland Trail Blazers': 'POR',
+    'Sacramento Kings'      : 'SAC', 'San Antonio Spurs'     : 'SAS',
+    'Seattle SuperSonics'   : 'SEA', 'Toronto Raptors'       : 'TOR',
+    'Utah Jazz'             : 'UTA', 'Washington Wizards'    : 'WAS'
+}
 
 def soup_from_url(url):
     """ url -> SoupObj ; Instantiate Beautiful Soup Object from a url """    
