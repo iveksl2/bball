@@ -30,35 +30,24 @@ BBALL_REF_TEAM_MAP = {
     'Utah Jazz'             : 'UTA', 'Washington Wizards'    : 'WAS'
 }
 
-def soup_from_url(url):
-    """ url -> SoupObj ; Instantiate Beautiful Soup Object from a url """    
-	response = requests.get(url)
-	html     = response.content
-	soup     = BeautifulSoup(html, 'lxml')
-	return soup
-
-def extract_simple_box_score_stats(team_tot_tags):
-    """bs4.element.Tag -> Numeric List; extracts Team Basic Box Score Statistics""" 
-    return [float(elem.get_text()) for elem in team_tot_tags.find_all('td')[1:-1]]
-
-def extract_adv_box_score_stats(team_tot_tags):
-    """bs4.element.Tag -> Numeric List; extracts Team Advanced Box Score Statistics"""
-    return [float(elem.get_text()) for elem in team_tot_tags.find_all('td')[1:]]
-
 def main():
+    # TODO: to make dynamic with S3 or DB call
+    bball_data =  pd.read_csv('/Users/iveksl2/Desktop/bball_data/box_scores.csv')
+     
+
+    # TODO: include pace
+    # 1 end to end example
     url = 'http://www.basketball-reference.com/boxscores/201603220BRK.html'
     soup = soup_from_url(url)
-    soup.find_all('tfoot')
-
     team_totals = soup.find_all('tfoot') 
-    [float(elem.get_text()) for elem in team_totals[1:-1]] 
 
-    # I don't like this style. If there is a way to make it more consise? 
-    away_basic_team_stats = team_totals[0]
-    away_adv_team_stats   = team_totals[1]
-    home_basic_team_stats = team_totals[2]
-    home_adv_team_stats   = team_totals[3]
+    # TODO: DRY
+    away_basic_team_stats = [float(elem.get_text()) for elem in team_totals[0].find_all('td')[:-1]]   
+    away_adv_team_stats   = [float(elem.get_text()) for elem in team_totals[1].find_all('td')]   
+    home_basic_team_stats = [float(elem.get_text()) for elem in team_totals[2].find_all('td')[:-1]]   
+    home_adv_team_stats   = [float(elem.get_text()) for elem in team_totals[3].find_all('td')]   
     
+   
  
 
 if __name__ == "__main__":
