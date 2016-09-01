@@ -8,7 +8,9 @@ import re
 import pandas as pd
 import pdb
 import time
- 
+from selenium import webdriver
+from bs4 import BeautifulSoup
+
 # constants
 BBALL_REF_TEAM_MAP = {
     'Atlanta Hawks'         : 'ATL', 'Boston Celtics'        : 'BOS',
@@ -30,12 +32,32 @@ BBALL_REF_TEAM_MAP = {
     'Utah Jazz'             : 'UTA', 'Washington Wizards'    : 'WAS'
 }
 
+def soup_from_url(url):
+    """ url -> SoupObj ; Instantiate Beautiful Soup Object from a url """    
+	response = requests.get(url)
+	html     = response.content
+	soup     = BeautifulSoup(html, 'lxml')
+	return soup
+
+
 def main():
     # TODO: to make dynamic with S3 or DB call
     bball_data =  pd.read_csv('/Users/iveksl2/Desktop/bball_data/box_scores.csv')
      
 
     # TODO: include pace
+    tmp = soup.find_all('div', { "class" : "table_outer_container"})
+    tmp = soup.find('div', {'id' : 'all_four_factors'}) # think this is the path
+    soup.find('div', {'class' : 'table_outer_container'})
+    tmp = soup.find('table', {'id' : 'div_four_factors'})
+
+
+    driver.get("http://www.basketball-reference.com/boxscores/201603300MIL.html")
+
+    Soup=BeautifulSoup(driver.page_source, "html.parser")
+    Pace=Soup.find("td",{"data-stat":"pace"})
+    Pace.text # success!
+
     # 1 end to end example
     url = 'http://www.basketball-reference.com/boxscores/201603220BRK.html'
     soup = soup_from_url(url)
