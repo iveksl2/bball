@@ -39,37 +39,38 @@ def soup_from_url(url):
 	soup     = BeautifulSoup(html, 'lxml')
 	return soup
 
+def extract_team_tots(box_score_tbl_link):
+    """ bs4.element.Tag -> list; extracts team totals from box score stats table"""    
+    team_tots = [x.get_text() for x in box_score_tbl_link.find_all('td') if x.get_text()]
+    return list(map(float, team_tots ))
 
 def main():
-    # TODO: to make dynamic with S3 or DB call
+    # TODO: make dynamic with S3 or DB call
     bball_data =  pd.read_csv('/Users/iveksl2/Desktop/bball_data/box_scores.csv')
      
 
+    url = 'http://www.basketball-reference.com/boxscores/201603220BRK.html'
+    
     # TODO: include pace
-    tmp = soup.find_all('div', { "class" : "table_outer_container"})
-    tmp = soup.find('div', {'id' : 'all_four_factors'}) # think this is the path
-    soup.find('div', {'class' : 'table_outer_container'})
-    tmp = soup.find('table', {'id' : 'div_four_factors'})
+    #tmp = soup.find_all('div', { "class" : "table_outer_container"})
+    #tmp = soup.find('div', {'id' : 'all_four_factors'}) # think this is the path
+    #soup.find('div', {'class' : 'table_outer_container'})
+    #tmp = soup.find('table', {'id' : 'div_four_factors'})
 
-
-    driver.get("http://www.basketball-reference.com/boxscores/201603300MIL.html")
-
-    Soup=BeautifulSoup(driver.page_source, "html.parser")
-    Pace=Soup.find("td",{"data-stat":"pace"})
-    Pace.text # success!
+    #TODO: make it headless for speed: https://www.youtube.com/watch?v=hktRQNpKktw
+    # Need to use selenium as four_factors table containing pace is poorly structured
+    driver = webdriver.Chrome(executable_path="/Users/iveksl2/Desktop/chromedriver")
+    driver.get(url)
+    
+    selenium_soup = BeautifulSoup(driver.page_source, "html.parser")
+    pace = selenium_soup.find("td", {"data-stat":"pace"})
+    float(pace.text)
 
     # 1 end to end example
-    url = 'http://www.basketball-reference.com/boxscores/201603220BRK.html'
     soup = soup_from_url(url)
     team_totals = soup.find_all('tfoot') 
 
-    # TODO: DRY
-    away_basic_team_stats = [float(elem.get_text()) for elem in team_totals[0].find_all('td')[:-1]]   
-    away_adv_team_stats   = [float(elem.get_text()) for elem in team_totals[1].find_all('td')]   
-    home_basic_team_stats = [float(elem.get_text()) for elem in team_totals[2].find_all('td')[:-1]]   
-    home_adv_team_stats   = [float(elem.get_text()) for elem in team_totals[3].find_all('td')]   
-    
-   
+    away_basic_team_stats, away_adv_team_stats, home_basic_team_stats, home_adv_team_stats = map(extract_team_tots, team_totals)  
  
 
 if __name__ == "__main__":
