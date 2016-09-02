@@ -1,6 +1,21 @@
 """ 
-http://www.basketball-reference.com/boxscores/201603220BRK.html
+Input: http://www.basketball-reference.com/boxscores/201603220BRK.html
+Output: 
+pace: 
+aFG, aFGA, aFG%, a3P, a3PA, a3P%, aFT, aFTA, aFT%, aORB, aDRB, aTRB, aAST, aSTL, aBLK, aTOV, aPF, aPTS, \
+aTS%, aeFG%, aPAr, aFTr, aORB%, aDRB%, aTRB%, aAST%, aSTL%, aBLK%, aTOV%, aUSG%, aORtg, aDRtg, \
+hFG, hFGA, hFG%, h3P, h3PA, h3P%, hFT, hFTA, hFT%, hORB, hDRB, hTRB, hAST, hSTL, hBLK, hTOV, hPF, hPTS, \
+hTS%, heFG%, hPAr, hFTr, hORB%, hDRB%, hTRB%, hAST%, hSTL%, hBLK%, hTOV%, hUSG%, hORtg, hDRtg
+[39.0, 82.0, 0.476, 10.0, 28.0, 0.357, 17.0, 21.0, 0.81, 3.0, 33.0, 36.0, 21.0, 7.0, 5.0, 8.0, 21.0, 105.0, 0.575, 0.537, 0.341, 0.256, 7.3, 84.6, 45.0, 53.8, 7.4, 8.9, 8.1, 100.0, 111.0, 105.7, 34.0, 74.0, 0.459, 8.0, 18.0, 0.444, 24.0, 27.0, 0.889, 6.0, 38.0, 44.0, 21.0, 4.0, 2.0, 16.0, 24.0, 100.0, 0.582, 0.514, 0.243, 0.365, 15.4, 92.7, 55.0, 61.8, 4.2, 3.7, 15.7, 100.0, 105.7, 111.0]
+...
+etc., 
+
+Data Dictionary embeded wthin html
+Prefix_Notation:
+h* = home
+a* = away
 """
+
 from bs4 import BeautifulSoup
 from datetime import date
 import requests
@@ -42,36 +57,35 @@ def soup_from_url(url):
 def extract_team_tots(box_score_tbl_link):
     """ bs4.element.Tag -> list; extracts team totals from box score stats table"""    
     team_tots = [x.get_text() for x in box_score_tbl_link.find_all('td') if x.get_text()]
-    return list(map(float, team_tots ))
+    team_tots = team_tots[1:] # Minutes played statistic is redundant on the team level 
+    return list(map(float, team_tots))
 
 def main():
+
+    driver = webdriver.Chrome(executable_path="/Users/iveksl2/Desktop/chromedriver")
+
     # TODO: make dynamic with S3 or DB call
     bball_data =  pd.read_csv('/Users/iveksl2/Desktop/bball_data/box_scores.csv')
-     
+    hometeam           = bball_data['hometeam'][0]     
+    bball_ref_hometeam = BBALL_REF_TEAM_MAP[hometeam]
+    game_date           = pd.Timestamp(bball_data['date'][0])
 
-    url = 'http://www.basketball-reference.com/boxscores/201603220BRK.html'
-    
-    # TODO: include pace
-    #tmp = soup.find_all('div', { "class" : "table_outer_container"})
-    #tmp = soup.find('div', {'id' : 'all_four_factors'}) # think this is the path
-    #soup.find('div', {'class' : 'table_outer_container'})
-    #tmp = soup.find('table', {'id' : 'div_four_factors'})
+    url = 'http://www.basketball-reference.com/boxscores/%d%02d%02d0%s.html' % (game_date.year, game_date.month, game_date.day, bball_ref_hometeam) 
 
     #TODO: make it headless for speed: https://www.youtube.com/watch?v=hktRQNpKktw
     # Need to use selenium as four_factors table containing pace is poorly structured
-    driver = webdriver.Chrome(executable_path="/Users/iveksl2/Desktop/chromedriver")
     driver.get(url)
     
     selenium_soup = BeautifulSoup(driver.page_source, "html.parser")
     pace = selenium_soup.find("td", {"data-stat":"pace"})
-    float(pace.text)
+    pace = [float(pace.text)]
 
     # 1 end to end example
     soup = soup_from_url(url)
     team_totals = soup.find_all('tfoot') 
 
     away_basic_team_stats, away_adv_team_stats, home_basic_team_stats, home_adv_team_stats = map(extract_team_tots, team_totals)  
- 
+    full_pg_adb_stats = pace + away_basic_team_stats + away_adv_team_stats + home_basic_team_stats + home_adv_team_stats 
 
 if __name__ == "__main__":
 	main()
