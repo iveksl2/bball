@@ -1,7 +1,7 @@
 """ 
 Input: http://www.basketball-reference.com/boxscores/201603220BRK.html
 Output: 
-pace: 
+pace, 
 aFG, aFGA, aFG%, a3P, a3PA, a3P%, aFT, aFTA, aFT%, aORB, aDRB, aTRB, aAST, aSTL, aBLK, aTOV, aPF, aPTS, \
 aTS%, aeFG%, aPAr, aFTr, aORB%, aDRB%, aTRB%, aAST%, aSTL%, aBLK%, aTOV%, aUSG%, aORtg, aDRtg, \
 hFG, hFGA, hFG%, h3P, h3PA, h3P%, hFT, hFTA, hFT%, hORB, hDRB, hTRB, hAST, hSTL, hBLK, hTOV, hPF, hPTS, \
@@ -47,6 +47,13 @@ BBALL_REF_TEAM_MAP = {
     'Utah Jazz'             : 'UTA', 'Washington Wizards'    : 'WAS'
 }
 
+EXTRACTED_TEAM_STATS = \ 
+    ['pace', \
+    'aFG', 'aFGA', 'aFG%', 'a3P', 'a3PA', 'a3P%', 'aFT', 'aFTA', 'aFT%', 'aORB', 'aDRB', 'aTRB', 'aAST', 'aSTL', 'aBLK', 'aTOV', 'aPF', 'aPTS', \
+    'aTS%', 'aeFG%', 'aPAr', 'aFTr', 'aORB%', 'aDRB%', 'aTRB%', 'aAST%', 'aSTL%', 'aBLK%', 'aTOV%', 'aUSG%', 'aORtg', 'aDRtg', \
+    'hFG', 'hFGA', 'hFG%', 'h3P', 'h3PA', 'h3P%', 'hFT', 'hFTA', 'hFT%', 'hORB', 'hDRB', 'hTRB', 'hAST', 'hSTL', 'hBLK', 'hTOV', 'hPF', 'hPTS', \
+    'hTS%', 'heFG%', 'hPAr', 'hFTr', 'hORB%', 'hDRB%', 'hTRB%', 'hAST%', 'hSTL%', 'hBLK%', 'hTOV%', 'hUSG%', 'hORtg', 'hDRtg']
+
 def soup_from_url(url):
     """ url -> SoupObj ; Instantiate Beautiful Soup Object from a url """    
 	response = requests.get(url)
@@ -60,32 +67,36 @@ def extract_team_tots(box_score_tbl_link):
     team_tots = team_tots[1:] # Minutes played statistic is redundant on the team level 
     return list(map(float, team_tots))
 
-def main():
+def gen_adv_box_score_url(game_date, hometeam_bball_ref):
+    """Date, Str -> Str; generate advanced box score url using basketball reference notation"""    
+    game_date           = pd.Timestamp(game_date)
+    url = 'http://www.basketball-reference.com/boxscores/%d%02d%02d0%s.html' % (game_date.year, game_date.month, game_date.day, hometeam_bball_ref) 
+    return url
 
-    driver = webdriver.Chrome(executable_path="/Users/iveksl2/Desktop/chromedriver")
+def main():
+    # Need to use selenium to extract as four_factors html table is poorly structured
+    bball_data =  pd.read_csv('/Users/iveksl2/Desktop/bball_data/box_scores.csv') # data driver 
+    web_driver = webdriver.Chrome(executable_path="/Users/iveksl2/Desktop/chromedriver") #TODO: make it headless for speed: https://www.youtube.com/watch?v=hktRQNpKktw
 
     # TODO: make dynamic with S3 or DB call
-    bball_data =  pd.read_csv('/Users/iveksl2/Desktop/bball_data/box_scores.csv')
     hometeam           = bball_data['hometeam'][0]     
-    bball_ref_hometeam = BBALL_REF_TEAM_MAP[hometeam]
-    game_date           = pd.Timestamp(bball_data['date'][0])
+    hometeam_bball_ref = BBALL_REF_TEAM_MAP[hometeam]
+    game_date          = bball_data['date'][0]
 
-    url = 'http://www.basketball-reference.com/boxscores/%d%02d%02d0%s.html' % (game_date.year, game_date.month, game_date.day, bball_ref_hometeam) 
-
-    #TODO: make it headless for speed: https://www.youtube.com/watch?v=hktRQNpKktw
-    # Need to use selenium as four_factors table containing pace is poorly structured
-    driver.get(url)
+    url = gen_adv_box_score_url(game_date, hometeam_bball_ref)              
+    web_driver.get(url)
     
-    selenium_soup = BeautifulSoup(driver.page_source, "html.parser")
+    selenium_soup = BeautifulSoup(web_driver.page_source, "html.parser")
     pace = selenium_soup.find("td", {"data-stat":"pace"})
     pace = [float(pace.text)]
 
-    # 1 end to end example
     soup = soup_from_url(url)
     team_totals = soup.find_all('tfoot') 
 
     away_basic_team_stats, away_adv_team_stats, home_basic_team_stats, home_adv_team_stats = map(extract_team_tots, team_totals)  
-    full_pg_adb_stats = pace + away_basic_team_stats + away_adv_team_stats + home_basic_team_stats + home_adv_team_stats 
+    full_pg_adv_stats = pace + away_basic_team_stats + away_adv_team_stats + home_basic_team_stats + home_adv_team_stats 
+    # append date & hometeam for more robust join
+    adv_stats_df      = pd.DataFrame([[game_date] + [hometeam] + full_pg_adv_stats], columns = ['game_date'] + ['hometeam'] + EXTRACTED_TEAM_STATS) 
 
 if __name__ == "__main__":
 	main()
