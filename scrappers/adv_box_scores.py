@@ -75,13 +75,13 @@ def gen_adv_box_score_url(game_date, hometeam_bball_ref):
 
 def main():
     # Need to use selenium to extract as four_factors html table is poorly structured
-    bball_data =  pd.read_csv('/Users/iveksl2/Desktop/bball_data/box_scores.csv') # data driver 
+    simple_boxscore_df =  pd.read_csv('/Users/iveksl2/Desktop/bball_data/box_scores.csv') # data driver 
     web_driver = webdriver.Chrome(executable_path="/Users/iveksl2/Desktop/chromedriver") #TODO: make it headless for speed: https://www.youtube.com/watch?v=hktRQNpKktw
 
     # TODO: make dynamic with S3 or DB call
-    hometeam           = bball_data['hometeam'][0]     
+    hometeam           = simple_boxscore_df['hometeam'][0]     
     hometeam_bball_ref = BBALL_REF_TEAM_MAP[hometeam]
-    game_date          = bball_data['date'][0]
+    game_date          = simple_boxscore_df['date'][0]
 
     url = gen_adv_box_score_url(game_date, hometeam_bball_ref)              
     web_driver.get(url)
@@ -97,6 +97,8 @@ def main():
     full_pg_adv_stats = pace + away_basic_team_stats + away_adv_team_stats + home_basic_team_stats + home_adv_team_stats 
     # append date & hometeam for more robust join
     adv_stats_df      = pd.DataFrame([[game_date] + [hometeam] + full_pg_adv_stats], columns = ['game_date'] + ['hometeam'] + EXTRACTED_TEAM_STATS) 
+
+    pd.merge(simple_boxscore_df, adv_stats_df, how = 'left', left_on = ['date', 'hometeam'], right_on = ['game_date', 'hometeam']).head()
 
 if __name__ == "__main__":
 	main()
