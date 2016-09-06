@@ -38,7 +38,7 @@ BBALL_REF_TEAM_MAP = {
     'Los Angeles Lakers'    : 'LAL', 'Memphis Grizzlies'     : 'MEM',
     'Miami Heat'            : 'MIA', 'Milwaukee Bucks'       : 'MIL',
     'Minnesota Timberwolves': 'MIN', 'New Jersey Nets'       : 'NJN',
-    'New Orleans Pelicans'  : 'NOP', 'New Orleans/Oklahoma City Hornets' : 'NOH',
+    'New Orleans Pelicans'  : 'NOP', 'New Orleans/Oklahoma City Hornets' : 'NOK',
     'New York Knicks'       : 'NYK', 'Oklahoma City Thunder' : 'OKC',
     'Orlando Magic'         : 'ORL', 'Philadelphia 76ers'    : 'PHI',
     'Phoenix Suns'          : 'PHO', 'Portland Trail Blazers': 'POR',
@@ -47,7 +47,7 @@ BBALL_REF_TEAM_MAP = {
     'Utah Jazz'             : 'UTA', 'Washington Wizards'    : 'WAS'
 }
 
-EXTRACTED_TEAM_STATS = \ 
+EXTRACTED_TEAM_STATS = \
     ['pace', \
     'aFG', 'aFGA', 'aFG%', 'a3P', 'a3PA', 'a3P%', 'aFT', 'aFTA', 'aFT%', 'aORB', 'aDRB', 'aTRB', 'aAST', 'aSTL', 'aBLK', 'aTOV', 'aPF', 'aPTS', \
     'aTS%', 'aeFG%', 'aPAr', 'aFTr', 'aORB%', 'aDRB%', 'aTRB%', 'aAST%', 'aSTL%', 'aBLK%', 'aTOV%', 'aUSG%', 'aORtg', 'aDRtg', \
@@ -55,11 +55,11 @@ EXTRACTED_TEAM_STATS = \
     'hTS%', 'heFG%', 'hPAr', 'hFTr', 'hORB%', 'hDRB%', 'hTRB%', 'hAST%', 'hSTL%', 'hBLK%', 'hTOV%', 'hUSG%', 'hORtg', 'hDRtg']
 
 def soup_from_url(url):
-    """ url -> SoupObj ; Instantiate Beautiful Soup Object from a url """    
-	response = requests.get(url)
-	html     = response.content
-	soup     = BeautifulSoup(html, 'lxml')
-	return soup
+    """ url -> SoupObj ; Instantiate Beautiful Soup Object from a url """
+    response = requests.get(url)
+    html     = response.content
+    soup     = BeautifulSoup(html, 'lxml')
+    return soup
 
 def extract_team_tots(box_score_tbl_link):
     """ bs4.element.Tag -> list; extracts team totals from box score stats table"""    
@@ -74,31 +74,35 @@ def gen_adv_box_score_url(game_date, hometeam_bball_ref):
     return url
 
 def main():
-    # Need to use selenium to extract as four_factors html table is poorly structured
     simple_boxscore_df =  pd.read_csv('/Users/iveksl2/Desktop/bball_data/box_scores.csv') # data driver 
-    web_driver = webdriver.Chrome(executable_path="/Users/iveksl2/Desktop/chromedriver") #TODO: make it headless for speed: https://www.youtube.com/watch?v=hktRQNpKktw
+    # Need to use selenium to extract as four_factors html table is poorly structured
+    #TODO: make it headless for speed: https://www.youtube.com/watch?v=hktRQNpKktw
+    web_driver = webdriver.Chrome(executable_path="/Users/iveksl2/Desktop/chromedriver") 
 
-    # TODO: make dynamic with S3 or DB call
-    hometeam           = simple_boxscore_df['hometeam'][0]     
-    hometeam_bball_ref = BBALL_REF_TEAM_MAP[hometeam]
-    game_date          = simple_boxscore_df['date'][0]
+    adv_box_scores = []
+    for i in range(0, 2000):
+        # TODO: make dynamic with S3 or DB call
+        hometeam           = simple_boxscore_df['hometeam'][i]     
+        hometeam_bball_ref = BBALL_REF_TEAM_MAP[hometeam]
+        game_date          = simple_boxscore_df['date'][i]
+        url = gen_adv_box_score_url(game_date, hometeam_bball_ref)              
+        print(i, url)
+        web_driver.get(url)
+        
+        selenium_soup = BeautifulSoup(web_driver.page_source, "html.parser")
+        pace = selenium_soup.find("td", {"data-stat":"pace"})
+        pace = [float(pace.text)]
 
-    url = gen_adv_box_score_url(game_date, hometeam_bball_ref)              
-    web_driver.get(url)
-    
-    selenium_soup = BeautifulSoup(web_driver.page_source, "html.parser")
-    pace = selenium_soup.find("td", {"data-stat":"pace"})
-    pace = [float(pace.text)]
+        soup = soup_from_url(url)
+        team_totals = soup.find_all('tfoot') 
 
-    soup = soup_from_url(url)
-    team_totals = soup.find_all('tfoot') 
+        away_basic_team_stats, away_adv_team_stats, home_basic_team_stats, home_adv_team_stats = map(extract_team_tots, team_totals)  
+        full_pg_adv_stats = [game_date] + [hometeam] + pace + away_basic_team_stats + away_adv_team_stats + home_basic_team_stats + home_adv_team_stats # append date & hometeam for more robust join
+        adv_box_scores.append(full_pg_adv_stats) 
 
-    away_basic_team_stats, away_adv_team_stats, home_basic_team_stats, home_adv_team_stats = map(extract_team_tots, team_totals)  
-    full_pg_adv_stats = pace + away_basic_team_stats + away_adv_team_stats + home_basic_team_stats + home_adv_team_stats 
-    # append date & hometeam for more robust join
-    adv_stats_df      = pd.DataFrame([[game_date] + [hometeam] + full_pg_adv_stats], columns = ['game_date'] + ['hometeam'] + EXTRACTED_TEAM_STATS) 
-
-    pd.merge(simple_boxscore_df, adv_stats_df, how = 'left', left_on = ['date', 'hometeam'], right_on = ['game_date', 'hometeam']).head()
+    adv_stats_df = pd.DataFrame(adv_box_scores, columns = ['game_date'] + ['hometeam'] + EXTRACTED_TEAM_STATS) 
+    adv_stats_df.to_csv('/Users/iveksl2/Desktop/bball_data/adv_box_scores/adv_box_scores1.csv', index = False) 
+    #pd.merge(simple_boxscore_df, adv_stats_df, how = 'left', left_on = ['date', 'hometeam'], right_on = ['game_date', 'hometeam']).head()
 
 if __name__ == "__main__":
 	main()
