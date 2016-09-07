@@ -39,6 +39,7 @@ BBALL_REF_TEAM_MAP = {
     'Miami Heat'            : 'MIA', 'Milwaukee Bucks'       : 'MIL',
     'Minnesota Timberwolves': 'MIN', 'New Jersey Nets'       : 'NJN',
     'New Orleans Pelicans'  : 'NOP', 'New Orleans/Oklahoma City Hornets' : 'NOK',
+    'New Orleans Hornets'   : 'NOH', 
     'New York Knicks'       : 'NYK', 'Oklahoma City Thunder' : 'OKC',
     'Orlando Magic'         : 'ORL', 'Philadelphia 76ers'    : 'PHI',
     'Phoenix Suns'          : 'PHO', 'Portland Trail Blazers': 'POR',
@@ -80,7 +81,7 @@ def main():
     web_driver = webdriver.Chrome(executable_path="/Users/iveksl2/Desktop/chromedriver") 
 
     adv_box_scores = []
-    for i in range(0, 2000):
+    for i in range(2000, 4000):
         # TODO: make dynamic with S3 or DB call
         hometeam           = simple_boxscore_df['hometeam'][i]     
         hometeam_bball_ref = BBALL_REF_TEAM_MAP[hometeam]
@@ -101,7 +102,7 @@ def main():
         adv_box_scores.append(full_pg_adv_stats) 
 
     adv_stats_df = pd.DataFrame(adv_box_scores, columns = ['game_date'] + ['hometeam'] + EXTRACTED_TEAM_STATS) 
-    adv_stats_df.to_csv('/Users/iveksl2/Desktop/bball_data/adv_box_scores/adv_box_scores1.csv', index = False) 
+    adv_stats_df.to_csv('/Users/iveksl2/Desktop/bball_data/adv_box_scores/adv_box_scores2.csv', index = False) 
     #pd.merge(simple_boxscore_df, adv_stats_df, how = 'left', left_on = ['date', 'hometeam'], right_on = ['game_date', 'hometeam']).head()
 
 if __name__ == "__main__":
