@@ -75,6 +75,7 @@ def gen_adv_box_score_url(game_date, hometeam_bball_ref):
     return url
 
 def main():
+    # TODO: make dynamic with S3 or DB call
     simple_boxscore_df =  pd.read_csv('/Users/iveksl2/Desktop/bball_data/box_scores.csv') # data driver 
     # Need to use selenium to extract as four_factors html table is poorly structured
     #TODO: make it headless for speed: https://www.youtube.com/watch?v=hktRQNpKktw
@@ -82,7 +83,6 @@ def main():
 
     adv_box_scores = []
     for i in range(2000, 4000):
-        # TODO: make dynamic with S3 or DB call
         hometeam           = simple_boxscore_df['hometeam'][i]     
         hometeam_bball_ref = BBALL_REF_TEAM_MAP[hometeam]
         game_date          = simple_boxscore_df['date'][i]
