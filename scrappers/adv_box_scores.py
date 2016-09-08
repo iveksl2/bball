@@ -82,7 +82,7 @@ def main():
     web_driver = webdriver.Chrome(executable_path="/Users/iveksl2/Desktop/chromedriver") 
 
     adv_box_scores = []
-    for i in range(2000, 4000):
+    for i in range(13000, 13782):
         hometeam           = simple_boxscore_df['hometeam'][i]     
         hometeam_bball_ref = BBALL_REF_TEAM_MAP[hometeam]
         game_date          = simple_boxscore_df['date'][i]
@@ -102,8 +102,12 @@ def main():
         adv_box_scores.append(full_pg_adv_stats) 
 
     adv_stats_df = pd.DataFrame(adv_box_scores, columns = ['game_date'] + ['hometeam'] + EXTRACTED_TEAM_STATS) 
-    adv_stats_df.to_csv('/Users/iveksl2/Desktop/bball_data/adv_box_scores/adv_box_scores2.csv', index = False) 
-    #pd.merge(simple_boxscore_df, adv_stats_df, how = 'left', left_on = ['date', 'hometeam'], right_on = ['game_date', 'hometeam']).head()
+    adv_stats_df.to_csv('/Users/iveksl2/Desktop/bball_data/adv_box_scores/adv_box_scores8.csv', index = False) 
+
+    # combine post scrapping 
+    adv_boxscore_df  = pd.read_csv('/Users/iveksl2/Desktop/bball_data/adv_box_scores/full_adv_box_scores.csv') 
+    full_boxscore_df = pd.merge(simple_boxscore_df, adv_boxscore_df, how = 'left', left_on = ['date', 'hometeam'], right_on = ['game_date', 'hometeam'])
+    full_boxscore_df.to_csv('/Users/iveksl2/Desktop/bball_data/adv_box_scores/simple_and_adv_stats.csv', index = False) 
 
 if __name__ == "__main__":
 	main()
