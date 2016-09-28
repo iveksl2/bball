@@ -16,7 +16,8 @@ import pandas as pd
 import pdb
 import time
 
-def make_soup(url):
+def soup_from_url(url):
+    """ url -> SoupObj ; Instantiate Beautiful Soup Object from a url """    
 	response = requests.get(url)
 	html     = response.content
 	soup     = BeautifulSoup(html, 'lxml')
@@ -61,7 +62,7 @@ def main():
 			  '&day='   + str(date_range.day[idx])   + \
 			  '&year='  + str(date_range.year[idx])
 	
-		soup       = make_soup(url)
+		soup       = soup_from_url(url)
 		team_lnks  = get_box_score_team_lnks(soup) 
 		if (team_lnks == []): continue
 		date_str   = str(date_range[idx].date())
