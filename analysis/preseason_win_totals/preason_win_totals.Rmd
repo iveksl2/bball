@@ -64,7 +64,9 @@ pt_diff_lag_df <- point_diff_df %>%
   dplyr::arrange(team, season) %>% 
   subset(., !team %in% team_name_changes) %>%
   dplyr::mutate(point_diff_lag1 = dplyr::lead(point_diff)) %>% 
-  dplyr::mutate(point_diff_lag2 = dplyr::lead(point_diff, 2)) %>% 
-  dplyr::mutate(point_diff_lag3 = dplyr::lead(point_diff, 3)) %>%
-  dplyr::mutate(num_wins_lag1   = dplyr::lead(num_wins, 1)) 
+  dplyr::mutate(point_diff_lag2 = dplyr::lead(point_diff, 2)) 
+
+naive_mod <- with(pt_diff_lag_df, lm(num_wins ~ point_diff_lag1 + point_diff_lag2))  
+summary(naive_mod)
 ```
+# [Preason Trades and Age related Adjustemnt](https://docs.google.com/spreadsheets/d/1KlFDXkmHwKxIPSFrXhYxQhveo3OlG1L2_NyB7YHgk8s/edit#gid=0)
