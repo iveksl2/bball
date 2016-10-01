@@ -10,4 +10,9 @@ output:
 
 # Forecasting presason win totals
 ### Naive Extrapolation
-![plot of chunk naive_extrapolation](figure/naive_extrapolation-1.png)
+
+```
+## Error: <text>:1:54: unexpected ')'
+## 1: opts_chunk$set(comment=NA, fig.width=9, fig.height=9))
+##                                                          ^
+```
