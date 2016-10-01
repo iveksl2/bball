@@ -1,3 +1,9 @@
+---
+title:"PreaSeaon Win Projections"
+output:
+  md_document
+---
+
 
 
 
@@ -5,6 +11,7 @@
 # Forecasting presason win totals
 ### Naive Extrapolation
 ```{r naive_extrapolation, echo = FALSE)
+
 point_diff_df %>%
   dplyr::mutate(season  = as.numeric(season)) %>%
       ggplot(aes(season, point_diff, color = team)) + 

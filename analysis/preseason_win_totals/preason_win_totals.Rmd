@@ -1,11 +1,19 @@
+---
+title:"PreaSeaon Win Projections"
+output:
+  md_document
+---
+
 ```{r dependencies, echo = FALSE} 
 library(bball)
 library(lubridate)
 library(ggplot2)
+library(dplyr)
+library(magrittr)
 ```
 
 ```{r setup, echo = FALSE} 
-dat               <- read.csv('~/Desktop/bball_data/adv_box_scores/full_adv_stats_df.csv')
+dat               <- read.csv('full_adv_stats_df.csv')
 dat$date          <- as.Date(dat$date)
 dat$is_reg_season <- vapply(dat$date, bball::is_regular_season, logical(1))
 df                <- bball::append_season_col(dat)
@@ -37,6 +45,7 @@ point_diff_df <-
 # Forecasting presason win totals
 ### Naive Extrapolation
 ```{r naive_extrapolation, echo = FALSE)
+
 point_diff_df %>%
   dplyr::mutate(season  = as.numeric(season)) %>%
       ggplot(aes(season, point_diff, color = team)) + 
