@@ -66,6 +66,7 @@ pt_diff_lag_df <- point_diff_df %>%
   dplyr::mutate(point_diff_lag1 = dplyr::lead(point_diff)) %>% 
   dplyr::mutate(point_diff_lag2 = dplyr::lead(point_diff, 2)) 
 
+Print('Naive Model')
 naive_mod <- with(pt_diff_lag_df, lm(num_wins ~ point_diff_lag1 + point_diff_lag2))  
 summary(naive_mod)
 ```
