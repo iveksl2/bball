@@ -44,7 +44,7 @@ point_diff_df <-
 
 # Forecasting presason win totals
 ### Naive Extrapolation
-```{r naive_extrapolation, echo = FALSE}
+```{r naive_extrapolation, echo = FALSE, fig.width = 10, fig.height = 10}
 
 point_diff_df %>%
   dplyr::mutate(season  = as.numeric(season)) %>%
