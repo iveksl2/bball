@@ -1,4 +1,10 @@
-# TODO: seperate PR - make h consistent, snake case lowercase, made lowercase but reflect in code
+```{r dependencies, echo = FALSE} 
+library(bball)
+library(lubridate)
+library(ggplot2)
+```
+
+```{r setup, echo = FALSE} 
 dat               <- read.csv('~/Desktop/bball_data/adv_box_scores/full_adv_stats_df.csv')
 dat$date          <- as.Date(dat$date)
 dat$is_reg_season <- vapply(dat$date, bball::is_regular_season, logical(1))
@@ -26,7 +32,11 @@ point_diff_df <-
   dplyr::rename(team = hometeam) %>%
   dplyr::mutate(., num_wins = home_num_wins + away_num_wins, 
                    point_diff = (home_point_diff +  away_point_diff) / 2)       
+```
 
+# Forecasting presason win totals
+### Naive Extrapolation
+```{r naive_extrapolation, echo = FALSE)
 point_diff_df %>%
   dplyr::mutate(season  = as.numeric(season)) %>%
       ggplot(aes(season, point_diff, color = team)) + 
@@ -48,4 +58,4 @@ pt_diff_lag_df <- point_diff_df %>%
   dplyr::mutate(point_diff_lag2 = dplyr::lead(point_diff, 2)) %>% 
   dplyr::mutate(point_diff_lag3 = dplyr::lead(point_diff, 3)) %>%
   dplyr::mutate(num_wins_lag1   = dplyr::lead(num_wins, 1)) 
-
+```
