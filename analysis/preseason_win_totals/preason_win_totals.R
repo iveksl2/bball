@@ -26,9 +26,7 @@ point_diff_df <-
   dplyr::mutate(., num_wins = home_num_wins + away_num_wins, 
                    point_diff = (home_point_diff +  away_point_diff) / 2)       
 
-# Forecasting presason win totals
-### Naive Extrapolation
-opts_chunk$set(comment=NA, fig.width=9, fig.height=9)
+## Naive Extrapolation
 point_diff_df %>%
   dplyr::mutate(season  = as.numeric(season)) %>%
       ggplot(aes(season, point_diff, color = team)) + 
