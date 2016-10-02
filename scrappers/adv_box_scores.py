@@ -50,10 +50,10 @@ BBALL_REF_TEAM_MAP = {
 
 EXTRACTED_TEAM_STATS = \
     ['pace', \
-    'aFG', 'aFGA', 'aFG%', 'a3P', 'a3PA', 'a3P%', 'aFT', 'aFTA', 'aFT%', 'aORB', 'aDRB', 'aTRB', 'aAST', 'aSTL', 'aBLK', 'aTOV', 'aPF', 'aPTS', \
-    'aTS%', 'aeFG%', 'aPAr', 'aFTr', 'aORB%', 'aDRB%', 'aTRB%', 'aAST%', 'aSTL%', 'aBLK%', 'aTOV%', 'aUSG%', 'aORtg', 'aDRtg', \
-    'hFG', 'hFGA', 'hFG%', 'h3P', 'h3PA', 'h3P%', 'hFT', 'hFTA', 'hFT%', 'hORB', 'hDRB', 'hTRB', 'hAST', 'hSTL', 'hBLK', 'hTOV', 'hPF', 'hPTS', \
-    'hTS%', 'heFG%', 'hPAr', 'hFTr', 'hORB%', 'hDRB%', 'hTRB%', 'hAST%', 'hSTL%', 'hBLK%', 'hTOV%', 'hUSG%', 'hORtg', 'hDRtg']
+    'aFG', 'aFGA', 'aFG_per', 'a3P', 'a3PA', 'a3P_per', 'aFT', 'aFTA', 'aFT_per', 'aORB', 'aDRB', 'aTRB', 'aAST', 'aSTL', 'aBLK', 'aTOV', 'aPF', 'aPTS', \
+    'aTS_per', 'aeFG_per', 'aPAr', 'aFTr', 'aORB_per', 'aDRB_per', 'aTRB_per', 'aAST_per', 'aSTL_per', 'aBLK_per', 'aTOV_per', 'aUSG_per', 'aORtg', 'aDRtg', \
+    'hFG', 'hFGA', 'hFG_per', 'h3P', 'h3PA', 'h3P_per', 'hFT', 'hFTA', 'hFT_per', 'hORB', 'hDRB', 'hTRB', 'hAST', 'hSTL', 'hBLK', 'hTOV', 'hPF', 'hPTS', \
+    'hTS_per', 'heFG_per', 'hPAr', 'hFTr', 'hORB_per', 'hDRB_per', 'hTRB_per', 'hAST_per', 'hSTL_per', 'hBLK_per', 'hTOV_per', 'hUSG_per', 'hORtg', 'hDRtg']
 
 def soup_from_url(url):
     """ url -> SoupObj ; Instantiate Beautiful Soup Object from a url """

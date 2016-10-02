@@ -15,3 +15,5 @@ append_season_col <- function(df) {
   } 
   df
 }
+#TODO: Realized one can compute this within function based on date and not require user to pass is_reg_season col
+#todo: make season factor
