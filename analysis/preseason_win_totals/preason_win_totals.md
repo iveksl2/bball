@@ -13,10 +13,6 @@ output:
 ![plot of chunk naive_extrapolation](figure/naive_extrapolation-1.png)
 
 ```
-## Error in eval(expr, envir, enclos): could not find function "Print"
-```
-
-```
 ## 
 ## Call:
 ## lm(formula = num_wins ~ point_diff_lag1 + point_diff_lag2)
