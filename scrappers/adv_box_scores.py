@@ -50,10 +50,10 @@ BBALL_REF_TEAM_MAP = {
 
 EXTRACTED_TEAM_STATS = \
     ['pace', \
-    'aFG', 'aFGA', 'aFG_per', 'a3P', 'a3PA', 'a3P_per', 'aFT', 'aFTA', 'aFT_per', 'aORB', 'aDRB', 'aTRB', 'aAST', 'aSTL', 'aBLK', 'aTOV', 'aPF', 'aPTS', \
-    'aTS_per', 'aeFG_per', 'aPAr', 'aFTr', 'aORB_per', 'aDRB_per', 'aTRB_per', 'aAST_per', 'aSTL_per', 'aBLK_per', 'aTOV_per', 'aUSG_per', 'aORtg', 'aDRtg', \
-    'hFG', 'hFGA', 'hFG_per', 'h3P', 'h3PA', 'h3P_per', 'hFT', 'hFTA', 'hFT_per', 'hORB', 'hDRB', 'hTRB', 'hAST', 'hSTL', 'hBLK', 'hTOV', 'hPF', 'hPTS', \
-    'hTS_per', 'heFG_per', 'hPAr', 'hFTr', 'hORB_per', 'hDRB_per', 'hTRB_per', 'hAST_per', 'hSTL_per', 'hBLK_per', 'hTOV_per', 'hUSG_per', 'hORtg', 'hDRtg']
+    'away_fg', 'away_fga', 'away_fg_per', 'away_3p', 'away_3pa', 'away_3p_per', 'away_ft', 'away_fta', 'away_ft_per', 'away_orb', 'away_drb', 'away_trb', 'away_ast', 'away_stl', 'away_blk', 'away_tov', 'away_pf', 'away_pts', \
+    'away_ts_per', 'away_efg_per', 'away_par', 'away_ftr', 'away_orb_per', 'away_drb_per', 'away_trb_per', 'away_ast_per', 'away_stl_per', 'away_blk_per', 'away_tov_per', 'away_usg_per', 'away_ortg', 'away_drtg', \
+    'home_fg', 'home_fga', 'home_fg_per', 'home_3p', 'home_3pa', 'home_3p_per', 'home_ft', 'home_fta', 'home_ft_per', 'home_orb', 'home_drb', 'home_trb', 'home_ast', 'home_stl', 'home_blk', 'home_tov', 'home_pf', 'home_pts', \
+    'home_ts_per', 'home_efg_per', 'home_par', 'home_ftr', 'home_orb_per', 'home_drb_per', 'home_trb_per', 'home_ast_per', 'home_stl_per', 'home_blk_per', 'home_tov_per', 'home_usg_per', 'home_ortg', 'home_drtg']
 
 def soup_from_url(url):
     """ url -> SoupObj ; Instantiate Beautiful Soup Object from a url """
