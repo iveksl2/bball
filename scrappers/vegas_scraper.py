@@ -1,9 +1,12 @@
 '''
+Written by Bhishan
+
 The following program uses following python modules:
 bs4 		for scraping purposes
 urllib2 	for requesting url content and reading response
 csv		for writing data to csv file
 
+Input: http://www.scoresandodds.com/grid_20160129.html
 
 Final Output
 scraped.csv file in the current working directory.
