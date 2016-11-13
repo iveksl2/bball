@@ -10,7 +10,7 @@ hTS%, heFG%, hPAr, hFTr, hORB%, hDRB%, hTRB%, hAST%, hSTL%, hBLK%, hTOV%, hUSG%,
 ...
 etc., 
 
-Data Dictionary embeded wthin html
+Data Dictionary:http://www.basketball-reference.com/about/glossary.html#ast
 Prefix_Notation:
 h* = home
 a* = away
