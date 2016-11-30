@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as  np
 from sklearn.ensemble import RandomForestClassifier 
 
-
 def re_arrange_first_col(df, col_name):
     col_lst = df.columns.tolist()
     col_lst.remove(col_name)
