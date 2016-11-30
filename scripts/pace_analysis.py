@@ -29,6 +29,7 @@ def shift_create_rolling_stats(df):
 	df_rolling = df.rolling(min_periods = 10, window = 80).mean()
 	return df_rolling
 
+# --------------------   workflow   --------------------------
 pd.set_option('display.width', 150) # todo: put this in a config file to persist 
 df = pd.read_csv('/Users/igor.veksler/Desktop/bball/game_data_and_vegas.csv')
 pd.options.display.max_columns = 50
