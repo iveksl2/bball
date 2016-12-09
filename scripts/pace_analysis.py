@@ -45,13 +45,14 @@ df                = re_arrange_first_col(df, 'game_id')
 long_gs  = wide_to_long(df, 'golden state warriors')
 long_cle = wide_to_long(df, 'cleveland cavaliers')
 
+# todo: break out
 rolling_team_avgs = {}
-for team in set(df.home_team.values):
+for team in set(df.home_team.values): 
     rolling_team_avgs[team] = wide_to_long(df, team)
     rolling_team_avgs[team]['game_id']  = rolling_team_avgs[team]['game_id'].astype(str) # hack to prevent rolling game_id 
     rolling_team_avgs[team]['date']  = rolling_team_avgs[team]['date'].astype(str) # hack to prevent rolling game_id 
     rolling_team_avgs[team].drop(['team_spread', 'team_moneyline'], axis = 1, inplace = True) 
-    rolling_team_avgs[team] = rolling_team_avgs[team].rolling(min_periods = 10, window = 80).mean()
+    rolling_team_avgs[team] = rolling_team_avgs[team].ewm(alpha = .15).mean()
     rolling_team_avgs[team]['game_id']   = rolling_team_avgs[team]['game_id'].astype(int) # hack to prevent rolling game_id 
     rolling_team_avgs[team]['date']      = pd.to_datetime(rolling_team_avgs[team]['date'])   # hack 
     rolling_team_avgs[team]['days_rest'] = rolling_team_avgs[team]['date'] - rolling_team_avgs[team]['date'].shift(1)
