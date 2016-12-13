@@ -8,6 +8,7 @@ url  = 'http://www.basketball-reference.com/boxscores/index.cgi?month=3&day=22&y
 etc.
 requirement: Python 3
 """
+
 from bs4 import BeautifulSoup
 from datetime import date
 import requests
@@ -46,7 +47,7 @@ def get_all_box_scores_on_pg(all_team_lnks, date_str = '', verbose = False):
 	full_pg_box_scores = []
 	for idx in range(0, len(all_team_lnks), 4):		
 		full_pg_box_scores.append(parse_box_table(all_team_lnks[idx:idx + 4 + 1], date_str))
-	if (verbose): print('Date:', date_str, 'successfully parsed', len(full_pg_box_scores), 'games')
+        if (verbose): print('Date:', date_str, 'successfully parsed', len(full_pg_box_scores), 'games')
 	return full_pg_box_scores
 
 
