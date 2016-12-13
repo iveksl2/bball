@@ -68,11 +68,11 @@ vegas_data = df[['game_id', 'date', 'home_team', 'away_team', 'total_score', 'ov
 vegas_data.index = vegas_data['date']
 
 rolling_avg_concat = pd.concat(rolling_team_avgs.values(), ignore_index = True) 
+rolling_avg_concat = rolling_avg_concat.sort_values(by = ['game_id']) 
 
 vegas_dat_merged = vegas_data.copy() 
 vegas_dat_merged  =  pd.merge(vegas_dat_merged, rolling_avg_concat , left_on = ['home_team', 'game_id'],   right_on = ['team', 'shifted_back_game_id'], how = 'left')
 vegas_dat_merged  =  pd.merge(vegas_dat_merged, rolling_avg_concat , left_on = ['away_team', 'game_id_x'],   right_on = ['team', 'shifted_back_game_id'], how = 'left')
-
 
 # ------ mod  -------------
 o_u_dat = vegas_dat_merged.dropna()
@@ -88,7 +88,7 @@ test_target = test_dat.total_score
 
 rf = RandomForestClassifier(n_estimators = 1000)
 
-features            = list(set(vegas_dat_merged.columns) - set(['game_id_x', 'game_id_y', 'home_team', 'away_team', 'team_x', 'team_y', 'date', 'game_date', 'game_date_x', 'game_date_y', 'partition', 'date_x', 'date_y', 'total_score'])) 
+features            = list(set(vegas_dat_merged.columns) - set(['game_id_x', 'game_id_y', 'home_team', 'away_team', 'team_x', 'team_y', 'date', 'game_date', 'game_date_x', 'game_date_y', 'partition', 'date_x', 'date_y', 'total_score', 'shifted_back_game_id_y', 'shifted_back_game_id_x'])) 
 
 rf.fit(train_dat[features], train_target)
 
