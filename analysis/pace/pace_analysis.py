@@ -67,43 +67,15 @@ for team in set(df.home_team.values):
 
 vegas_data = df[['game_id', 'date', 'home_team', 'away_team', 'total_score', 'over_under', 'pace']]
 vegas_data.index = vegas_data['date']
+vegas_data.rename(columns = {'pace' : 'game_pace'}, inplace = True)
 
 rolling_avg_concat = pd.concat(rolling_team_avgs.values(), ignore_index = True) 
 rolling_avg_concat = rolling_avg_concat.sort_values(by = ['game_id']) 
 
-vegas_dat_merged = vegas_data.copy() 
+vegas_dat_merged  = vegas_data.copy() 
 vegas_dat_merged  =  pd.merge(vegas_dat_merged, rolling_avg_concat , left_on = ['home_team', 'game_id'],   right_on = ['team', 'shifted_back_game_id'], how = 'left')
 vegas_dat_merged  =  pd.merge(vegas_dat_merged, rolling_avg_concat , left_on = ['away_team', 'game_id_x'],   right_on = ['team', 'shifted_back_game_id'], how = 'left')
 
-# ------ mod  -------------
-o_u_dat = vegas_dat_merged.dropna()
-o_u_dat = o_u_dat[o_u_dat.over_under > 100] 
-
-o_u_dat['partition'] = create_train_test_col(o_u_dat)
-
-train_dat    = o_u_dat[o_u_dat.partition == 'train']
-train_target = train_dat.total_score 
-
-test_dat    = o_u_dat[o_u_dat.partition == 'test']
-test_target = test_dat.total_score 
-
-rf = RandomForestClassifier(n_estimators = 1000)
-
-features            = list(set(vegas_dat_merged.columns) - set(['game_id_x', 'game_id_y', 'home_team', 'away_team', 'team_x', 'team_y', 'date', 'game_date', 'game_date_x', 'game_date_y', 'partition', 'date_x', 'date_y', 'total_score', 'shifted_back_game_id_y', 'shifted_back_game_id_x'])) 
-
-rf.fit(train_dat[features], train_target)
-
-test_dat['model_o_u'] = rf.predict(test_dat[features])
-
-val_df  = test_dat[['total_score', 'over_under', 'model_o_u']]
-val_df['dif'] = val_df['model_o_u'] - val_df['over_under']
-
-
-diff_threshold = 0 
-val_df['dif'] = val_df['model_o_u'] - val_df['over_under']
-bet_over_df  = val_df[val_df.dif > diff_threshold]
-bet_under_df = val_df[val_df.dif < -diff_threshold]
-
-print(np.mean(bet_over_df.total_score > bet_over_df.over_under))
-print(np.mean(bet_under_df.total_score < bet_under_df.over_under))
+pace_df           = vegas_dat_merged[['date', 'game_pace', 'pace_x', 'pace_y', 'home_team', 'away_team']]
+pace_df           = pace_df.dropna()
 
