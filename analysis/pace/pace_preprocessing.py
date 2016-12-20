@@ -8,7 +8,7 @@ def create_train_test_col(df, train_per = .8):
     num_train  = int(train_per * df.shape[0])
     return ['train'] * num_train + ['test'] * (num_rows - num_train)
 
-def re_arrange_first_col(df, col_name):
+def make_first_col(df, col_name):
     col_lst = df.columns.tolist()
     col_lst.remove(col_name)
     new_col_lst = [col_name] + col_lst 
@@ -40,7 +40,7 @@ df['date']        = pd.to_datetime(df['date'])
 df['away_team']   = df['away_team'].str.lower() #todo, do this upsream
 df['home_team']   = df['home_team'].str.lower() #todo, do this upsream
 df['total_score'] = df['home_finalscore'] + df['away_finalscore']
-df                = re_arrange_first_col(df, 'game_id')
+df                = make_first_col(df, 'game_id')
 
 long_gs  = wide_to_long(df, 'golden state warriors')
 long_cle = wide_to_long(df, 'cleveland cavaliers')
