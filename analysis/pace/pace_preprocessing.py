@@ -36,11 +36,13 @@ df = pd.read_csv('/Users/igor.veksler/Desktop/bball/game_data_and_vegas.csv')
 df = df[df.reg_season == True]
 df['game_id']     = range(df.shape[0])
 pd.options.display.max_columns = 50
-df['date']        = pd.to_datetime(df['date'])
-df['away_team']   = df['away_team'].str.lower() #todo, do this upsream
-df['home_team']   = df['home_team'].str.lower() #todo, do this upsream
-df['total_score'] = df['home_finalscore'] + df['away_finalscore']
-df                = make_first_col(df, 'game_id')
+df['date']         = pd.to_datetime(df['date'])
+df['away_team']    = df['away_team'].str.lower() #todo, do this upsream
+df['home_team']    = df['home_team'].str.lower() #todo, do this upsream
+df['total_score']  = df['home_finalscore'] + df['away_finalscore']
+df['home_pt_diff'] = df['home_finalscore'] - df['away_finalscore']
+df['away_pt_diff'] = df['away_finalscore'] - df['home_finalscore']
+df                 = make_first_col(df, 'game_id')
 
 long_gs  = wide_to_long(df, 'golden state warriors')
 long_cle = wide_to_long(df, 'cleveland cavaliers')
