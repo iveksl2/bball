@@ -40,14 +40,14 @@ df['date']         = pd.to_datetime(df['date'])
 df['away_team']    = df['away_team'].str.lower() #todo, do this upsream
 df['home_team']    = df['home_team'].str.lower() #todo, do this upsream
 df['total_score']  = df['home_finalscore'] + df['away_finalscore']
-df['home_pt_diff'] = df['home_finalscore'] - df['away_finalscore']
+df['home_pt_diff'] = df['home_finalscore'] - df['away_finalscore'] #TODO: put this in the base code
 df['away_pt_diff'] = df['away_finalscore'] - df['home_finalscore']
 df                 = make_first_col(df, 'game_id')
 
 long_gs  = wide_to_long(df, 'golden state warriors')
 long_cle = wide_to_long(df, 'cleveland cavaliers')
 
-# todo: break out
+# todo: break out, find a way to make more elegant!
 rolling_team_avgs = {}
 for team in set(df.home_team.values): 
     rolling_team_avgs[team] = wide_to_long(df, team)
@@ -74,10 +74,10 @@ vegas_data.rename(columns = {'pace' : 'game_pace'}, inplace = True)
 rolling_avg_concat = pd.concat(rolling_team_avgs.values(), ignore_index = True) 
 rolling_avg_concat = rolling_avg_concat.sort_values(by = ['game_id']) 
 
-vegas_dat_merged  = vegas_data.copy() 
+vegas_dat_merged  =  vegas_data.copy() 
 vegas_dat_merged  =  pd.merge(vegas_dat_merged, rolling_avg_concat , left_on = ['home_team', 'game_id'],   right_on = ['team', 'shifted_back_game_id'], how = 'left')
 vegas_dat_merged  =  pd.merge(vegas_dat_merged, rolling_avg_concat , left_on = ['away_team', 'game_id_x'],   right_on = ['team', 'shifted_back_game_id'], how = 'left')
 
-pace_df           = vegas_dat_merged[['date', 'game_pace', 'pace_x', 'pace_y', 'home_team', 'away_team']]
+pace_df           = vegas_dat_merged[['date', 'home_team', 'away_team', 'game_pace', 'pace_x', 'pace_y', 'pt_diff_x', 'pt_diff_y']]
 pace_df           = pace_df.dropna()
-
+pace_df.to_csv('pace_df.csv', index = False)
