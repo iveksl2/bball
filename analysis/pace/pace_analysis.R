@@ -96,3 +96,23 @@ pace_dev_time %>% tidyr::gather(., 'ma_factor', 'ma', -date) %>%
     ggplot(., aes(date, ma, color = ma_factor)) + geom_line() + 
     ggtitle('moving average pace deviation')
 
+# b2b effect on total score 
+pace_df %>%
+    dplyr::filter(days_rest_x <= 11) %>%
+    dplyr::group_by(days_rest_x) %>%
+    dplyr::summarise(total_score = mean(total_score),count =  n()) %>%
+    ggplot(., aes(days_rest_x, total_score)) + geom_bar(stat = 'identity')
+
+pace_df %>%
+    dplyr::mutate(b2b = ifelse(days_rest_x == 1 | days_rest_y == 1, 1, 0)) %>%
+    dplyr::group_by(b2b) %>%
+    dplyr::summarise(total_score = mean(total_score))
+
+pace_df %>%
+    dplyr::mutate(home_b2b = ifelse(days_rest_x == 1, 1, 0),
+                  away_b2b = ifelse(days_rest_y == 1, 1, 0)) %>%
+    dplyr::group_by(home_b2b, away_b2b) %>%
+    dplyr::summarise(total_score = mean(total_score), 
+                     pace = mean(game_pace), count = n())
+
+# nba seems to schedule away team, defense deteriorates

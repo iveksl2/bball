@@ -78,6 +78,8 @@ vegas_dat_merged  =  vegas_data.copy()
 vegas_dat_merged  =  pd.merge(vegas_dat_merged, rolling_avg_concat , left_on = ['home_team', 'game_id'],   right_on = ['team', 'shifted_back_game_id'], how = 'left')
 vegas_dat_merged  =  pd.merge(vegas_dat_merged, rolling_avg_concat , left_on = ['away_team', 'game_id_x'],   right_on = ['team', 'shifted_back_game_id'], how = 'left')
 
-pace_df           = vegas_dat_merged[['date', 'home_team', 'away_team', 'game_pace', 'pace_x', 'pace_y', 'pt_diff_x', 'pt_diff_y']]
+pace_df           = vegas_dat_merged[['date', 'home_team', 'away_team', 'game_pace', 
+                                      'pace_x', 'pace_y', 'pt_diff_x', 'pt_diff_y', 
+                                      'days_rest_x', 'days_rest_y', 'total_score']]
 pace_df           = pace_df.dropna()
 pace_df.to_csv('pace_df.csv', index = False)
