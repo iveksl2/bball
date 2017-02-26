@@ -33,17 +33,12 @@ soup = get_soup(url)
 driver = webdriver.Chrome(executable_path='/Users/igor.veksler/Desktop/chromedriver')
 
 driver.get(url)
+
 # mpg
 advanced_rows = driver.find_elements_by_xpath('//*[@id="advanced"]/tbody/tr')
 advanced_rows[0].find_elements_by_xpath('child::*')[1].text
 # bpm
 per_game_rows = driver.find_elements_by_xpath('//*[@id="per_game"]/tbody/tr')
 per_game_rows[0].find_elements_by_xpath('child::*')[1].text
-
-##selenium approach (doesent work)
-#chrome_driver = webdriver.Chrome("/Users/igor.veksler/Desktop/chromedriver") 
-#chrome_driver.get('http://www.basketball-reference.com/teams/OKC/2017.html')
-#selenium_soup = BeautifulSoup(chrome_driver.page_source, "html.parser")
-#pace = selenium_soup.find("td", {"data-stat":"pace"})
 
 
