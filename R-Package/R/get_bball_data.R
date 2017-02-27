@@ -23,8 +23,11 @@ get_full_rpm <-  function() {
   ## currently espn has 13 pages worth of player data. Not very Robust code 
   full_rpm <- plyr::ldply(seq(13), get_partial_rpm, .progress = 'text')
   ## convert to numeric  -> decided to do here instead of helper for performance optimization 
-  numeric_vars <- c( "GP", "MPG", "ORPM", "DRPM", "RPM", "WAR")
-  full_rpm[, numeric_vars] <- sapply(full_rpm[, numeric_vars], as.numeric)
+  numeric_vars <- c( "GP", "MPG", "ORPM", "DRPM", "RPM")
+  full_rpm[, numeric_vars] <- vapply(full_rpm[, numeric_vars], 
+                                     as.numeric, 
+                                     numeric(NROW(full_rpm)))
+  full_rpm[['NAME']] <- sapply(full_rpm[['NAME']], function(x) strsplit(x, ',')[[1]][1])  
   full_rpm
 }
 
