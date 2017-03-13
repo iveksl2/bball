@@ -14,7 +14,7 @@ scraped.csv file in the current working directory.
 
 
 from bs4 import BeautifulSoup 
-import urllib2
+import requests
 import csv
 
 csvwriter = csv.writer(file('scraped.csv', 'ab'))
@@ -41,7 +41,9 @@ def scrape_individual_contents(each_away, each_home, date_content):
     get_spread_overunder method is called from here for getting correct data fields. 
     '''
     away_team_name = each_away.find('a').text
+    away_team_name = ' '.join(away_team_name.split(' ')[1:3]) 
     home_team_name = each_home.find('a').text
+    home_team_name = ' '.join(home_team_name.split(' ')[1:3]) 
     away_team_tds = each_away.find_all('td')
     home_team_tds = each_home.find_all('td')
     away_team_current = (away_team_tds[3]).text
@@ -56,7 +58,9 @@ def scrape_individual_contents(each_away, each_home, date_content):
     away_team_moneyline = (away_team_tds[4]).text 
     home_team_moneyline = (home_team_tds[4]).text
 
-    csvwriter.writerow([date_content, home_team_name, away_team_name, home_team_spread, away_team_spread, home_team_moneyline, away_team_moneyline, over_under])
+    #csvwriter.writerow([date_content, home_team_name, away_team_name, home_team_spread, away_team_spread, home_team_moneyline, away_team_moneyline, over_under])
+    print([date_content, home_team_name, away_team_name, home_team_spread, away_team_spread, home_team_moneyline, away_team_moneyline, over_under])
+    return([date_content, home_team_name, away_team_name, home_team_spread, away_team_spread, home_team_moneyline, away_team_moneyline, over_under])
 
 
 def main(url):
@@ -66,10 +70,9 @@ def main(url):
     Uses bs4 to get the rows for nba data
     Passes each home team row and away team row to scrape_individual_contents method for further scraping.
     '''
-    response = urllib2.urlopen(url)
-    response = response.read()
+    response = requests.get(url).content 
     soup = BeautifulSoup(response)
-    date_content = (soup.find('div', attrs={'class':'date'})).text
+    date_content = soup.find('div', attrs={'class':'date'}).text
     nba_table_area = soup.find('div', attrs={'class':'rightShadow'})
     away_team_tr = nba_table_area.find_all('tr', attrs={'class':'odd'})
     home_team_tr = nba_table_area.find_all('tr', attrs={'class':'even'})
@@ -78,7 +81,7 @@ def main(url):
         scrape_individual_contents(each_away, each_home, date_content)    
 
 if __name__ == '__main__':
-    url = "http://www.scoresandodds.com/grid_20160129.html"
+    url = "http://www.scoresandodds.com/grid_20170310.html"
     main(url)
 
 
