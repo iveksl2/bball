@@ -14,11 +14,13 @@ scraped.csv file in the current working directory.
 
 
 from bs4 import BeautifulSoup 
-import requests
+from datetime import date
 import csv
+import pandas as pd
+import requests
 
-csvwriter = csv.writer(file('scraped.csv', 'ab'))
-csvwriter.writerow(['date', 'home_team', 'away_team', 'home_team_spread', 'away_team_spread', 'home_team_moneyline', 'away_team_moneyline', 'over_under'])
+#csvwriter = csv.writer(file('scraped.csv', 'ab'))
+#csvwriter.writerow(['date', 'home_team', 'away_team', 'home_team_spread', 'away_team_spread', 'home_team_moneyline', 'away_team_moneyline', 'over_under'])
 
 def get_spread_overunder(away_team_current, home_team_current):
     '''
@@ -57,19 +59,9 @@ def scrape_individual_contents(each_away, each_home, date_content):
     home_team_spread, away_team_spread, over_under = get_spread_overunder(away_team_current, home_team_current)
     away_team_moneyline = (away_team_tds[4]).text 
     home_team_moneyline = (home_team_tds[4]).text
-
-    #csvwriter.writerow([date_content, home_team_name, away_team_name, home_team_spread, away_team_spread, home_team_moneyline, away_team_moneyline, over_under])
-    print([date_content, home_team_name, away_team_name, home_team_spread, away_team_spread, home_team_moneyline, away_team_moneyline, over_under])
     return([date_content, home_team_name, away_team_name, home_team_spread, away_team_spread, home_team_moneyline, away_team_moneyline, over_under])
 
-
-def main(url):
-    '''
-    url: param string
-    Uses urllib2 to request and read content. 
-    Uses bs4 to get the rows for nba data
-    Passes each home team row and away team row to scrape_individual_contents method for further scraping.
-    '''
+def get_vegas_lines(url):
     response = requests.get(url).content 
     soup = BeautifulSoup(response)
     date_content = soup.find('div', attrs={'class':'date'}).text
@@ -77,8 +69,24 @@ def main(url):
     away_team_tr = nba_table_area.find_all('tr', attrs={'class':'odd'})
     home_team_tr = nba_table_area.find_all('tr', attrs={'class':'even'})
     
+    vegas_lines = []     
     for each_away, each_home in zip(away_team_tr, home_team_tr):
-        scrape_individual_contents(each_away, each_home, date_content)    
+        vegas_line = scrape_individual_contents(each_away, each_home, date_content)    
+        vegas_lines.append(vegas_line)            
+    
+    return(pd.DataFrame(vegas_lines, columns = ['date', 'home_team', 'away_team', 'home_spread', 'away_spread', 'home_moneyline', 'away_moneyline', 'over_under']))
+    
+def vegasize_date(date):
+    """Date -> vegas_line_endpoint_url"""
+    base_url = "http://www.scoresandodds.com/grid_"
+    vegas_url = base_url + "%d%02d%02d.html" % (date.year, date.month, date.day)
+    return vegas_url
+
+def main(url):
+    a_date = date(2017,3,10)
+    vegas_url = vegasize_date(a_date)
+    get_vegas_lines(vegas_url)
+    
 
 if __name__ == '__main__':
     url = "http://www.scoresandodds.com/grid_20170310.html"
