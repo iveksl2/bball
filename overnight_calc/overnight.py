@@ -21,6 +21,14 @@ def get_bpm_and_roster(team_base_html):
     bpm_df['MPG'] = bpm_df['MP'] / bpm_df['GP']  
     return bpm_df    
 
+def get_driver(team):
+    """team_abbreviation -> selenium_team_driver"""
+    URL = 'http://www.basketball-reference.com/teams/' + team + '/2017.html'
+    driver = webdriver.Chrome(executable_path='/Users/igor.veksler/Desktop/chromedriver')
+    driver.get(URL)
+    return driver
+
+
 # constants
 teams = ['ATL',  'BOS', 'BRK',  'CHA', 'CHO',  'CHI', 'CLE',  'DAL',
          'DEN',  'DET', 'GSW',  'HOU', 'IND',  'LAC', 'LAL',  'MEM',
@@ -28,10 +36,9 @@ teams = ['ATL',  'BOS', 'BRK',  'CHA', 'CHO',  'CHI', 'CLE',  'DAL',
          'OKC', 'ORL',  'PHI', 'PHO',  'POR', 'SAC',  'SAS', 'SEA',  
          'TOR', 'UTA',  'WAS' ]
 
-def main()
+
+def main():
     team = teams[5]
-    URL = 'http://www.basketball-reference.com/teams/' + team + '/2017.html'
-    driver = webdriver.Chrome(executable_path='/Users/igor.veksler/Desktop/chromedriver')
-    driver.get(URL)
-
-
+    driver = get_driver(team)
+    lineup_stats = get_bpm_and_roster(driver)
+    
