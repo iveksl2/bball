@@ -1,3 +1,4 @@
+#!/usr/local/bin/python3.6/
 '''
 Duplicate code from scrapper repo
 #TODO: Import as library
@@ -6,9 +7,11 @@ Duplicate code from scrapper repo
 
 from bs4 import BeautifulSoup 
 from datetime import date
+from dateutil import parser
 import csv
 import pandas as pd
 import requests
+import sys
 
 #csvwriter = csv.writer(file('scraped.csv', 'ab'))
 #csvwriter.writerow(['date', 'home_team', 'away_team', 'home_team_spread', 'away_team_spread', 'home_team_moneyline', 'away_team_moneyline', 'over_under'])
@@ -67,7 +70,7 @@ def get_vegas_lines(url):
     
     return(pd.DataFrame(vegas_lines, columns = ['date', 'home_team', 'away_team', 'home_spread', 'away_spread', 'home_moneyline', 'away_moneyline', 'over_under']))
     
-def vegasize_date(date):
+def vegas_urlize_date(date):
     """Date -> vegas_line_endpoint_url"""
     base_url = "http://www.scoresandodds.com/grid_"
     vegas_url = base_url + "%d%02d%02d.html" % (date.year, date.month, date.day)
@@ -75,7 +78,7 @@ def vegasize_date(date):
 
 def main(url):
     a_date = date(2017,3,10)
-    vegas_url = vegasize_date(a_date)
+    vegas_url = vegas_urlize_date(a_date)
     get_vegas_lines(vegas_url)
     
 

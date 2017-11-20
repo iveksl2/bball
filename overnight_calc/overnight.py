@@ -1,12 +1,18 @@
 # http://www.basketball-reference.com/teams/CLE/2017.html
-from bs4 import BeautifulSoup
-from datetime import date
-import requests
-import re
 import pandas as pd
 import pdb
+import naming_convention_mapper
+import re
+import requests
+import sys
 import time
+import vegas_scraper
+
+from bs4 import BeautifulSoup
+from datetime import date
+from dateutil import parser
 from selenium import webdriver
+
 
 def get_bpm_and_roster(team_base_html):
     advanced_table = team_base_html.find_elements_by_xpath('//*[@id="advanced"]/tbody/tr')
@@ -38,7 +44,15 @@ teams = ['ATL',  'BOS', 'BRK',  'CHA', 'CHO',  'CHI', 'CLE',  'DAL',
 
 
 def main():
-    team = teams[5]
+    #vegas_scrape_date = parser.parse(sys.argv[1])
+    vegas_scrape_date  = date(2017,3,10)
+    vegas_url = vegas_scraper.vegas_urlize_date(vegas_scrape_date)
+    vegas_df = vegas_scraper.get_vegas_lines(vegas_url)
+    
+
     driver = get_driver(team)
+    team = teams[5]
     lineup_stats = get_bpm_and_roster(driver)
     
+     
+
